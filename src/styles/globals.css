@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base Variables ─────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --bg-primary: #fdfbf7;
+    --bg-secondary: #f9f4ea;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #8a8a8a;
+    --border-color: #e8e2d6;
+    --accent-gold: #d97706;
+    --accent-gold-light: #fef3c7;
+    --accent-primary: #194833;
+    --accent-primary-light: #d3e8de;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --warning: #f59e0b;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] font-amiri antialiased;
+    direction: rtl;
+  }
+
+  /* Ensure LTR for English mode */
+  html[dir="ltr"] body {
+    direction: ltr;
+  }
+}
+
+/* ─── Component Overrides ────────────────────────────────────────────────── */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg
+           bg-[var(--accent-primary)] text-white font-heading
+           transition-colors duration-200
+           focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
+    /* Tailwind @apply doesn't support opacity on arbitrary CSS var values, so we use raw CSS */
+    &:hover {
+      background-color: rgba(25, 72, 51, 0.9);
+    }
+    &:focus-visible {
+      --tw-ring-color: rgba(25, 72, 51, 0.5);
+      @apply ring-2;
+    }
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg
+           border border-[var(--border-color)] bg-white text-[var(--text-primary)] font-heading
+           hover:bg-[var(--bg-secondary)] transition-colors duration-200
+           focus:outline-none;
+    &:focus-visible {
+      --tw-ring-color: rgba(232, 226, 214, 0.5);
+      @apply ring-2;
+    }
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg
+           border border-[var(--accent-primary)] text-[var(--accent-primary)] font-heading
+           transition-colors duration-200;
+    &:hover {
+      background-color: rgba(25, 72, 51, 0.05);
+    }
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 rounded-lg
+           border border-[var(--border-color)] bg-white
+           focus:outline-none focus:border-[var(--accent-primary)]
+           placeholder:text-[var(--text-muted)] transition-shadow duration-200;
+    &:focus-visible {
+      --tw-ring-color: rgba(25, 72, 51, 0.3);
+      @apply ring-2;
+    }
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-heading font-medium;
+  }
+
+  .card {
+    @apply bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)]
+           transition-all duration-200;
+    &:hover {
+      border-color: rgba(25, 72, 51, 0.3);
+    }
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-[var(--bg-secondary)] rounded-lg;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+}
+
+/* ─── Utility Classes ────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+}
