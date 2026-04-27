@@ -17,10 +17,11 @@ export interface ReportModalProps {
 export function ReportModal({ isOpen, onClose, onSubmit, resourceSlug, resourceName }: ReportModalProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const { submitReport, isSubmitting } = useReport();
+  const { submitReport, isSubmitting } = useReport(resourceSlug);
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+  const [reasonTouched, setReasonTouched] = useState(false);
 
   if (!isOpen) return null;
 
@@ -29,6 +30,7 @@ export function ReportModal({ isOpen, onClose, onSubmit, resourceSlug, resourceN
     setFormError(null);
 
     if (!reason) {
+      setReasonTouched(true);
       setFormError(t.resource.detail.reportReason + ' is required');
       return;
     }
@@ -60,8 +62,8 @@ export function ReportModal({ isOpen, onClose, onSubmit, resourceSlug, resourceN
             </label>
             <select
               value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]"
+              onChange={(e) => { setReason(e.target.value); setReasonTouched(false); }}
+              className={`w-full px-3 py-2 border rounded-md bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm focus:outline-none focus:ring-2 ${reasonTouched && !reason ? 'border-[var(--danger)] focus:ring-[var(--danger)]' : 'border-[var(--border-color)] focus:ring-[var(--accent-primary)]'}`}
             >
               <option value="">Select a reason</option>
               <option value="inaccurate">{t.resource.detail.reportReasonInaccurate}</option>
@@ -89,7 +91,7 @@ export function ReportModal({ isOpen, onClose, onSubmit, resourceSlug, resourceN
           </div>
 
           {formError && (
-            <p className="text-xs text-[var(--error)] mb-3">{formError}</p>
+            <p className="text-xs text-[var(--danger)] mb-3">{formError}</p>
           )}
 
           <div className="flex justify-end gap-3">
@@ -103,7 +105,7 @@ export function ReportModal({ isOpen, onClose, onSubmit, resourceSlug, resourceN
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm bg-[var(--accent-primary)] text-white rounded-md hover:bg-[var(--accent-primary-dark)] transition-colors disabled:opacity-50"
+              className="btn-primary text-sm disabled:opacity-50"
             >
               {isSubmitting ? 'Submitting...' : t.resource.detail.reportSubmit}
             </button>

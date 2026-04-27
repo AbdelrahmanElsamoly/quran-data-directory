@@ -9,6 +9,7 @@ export const en = {
     auth: {
       login: 'Log in',
       register: 'Register',
+      logout: 'Log out',
     },
     langSwitch: {
       ar: 'عربي',
@@ -72,6 +73,9 @@ export const en = {
       dataset: 'Dataset',
       api: 'API',
       tafsir: 'Tafsir',
+      audio: 'Audio',
+      pdf: 'PDF',
+      json: 'JSON',
     },
   },
 
@@ -107,6 +111,7 @@ export const en = {
       noComments: 'No comments yet',
       requestFailed: 'Failed to submit request. Please try again.',
       loginToRequest: 'Log in to request access',
+      loginToReport: 'Log in to report',
       // Report
       report: 'Report',
       reportTooltip: 'Report this resource',

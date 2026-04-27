@@ -18,6 +18,7 @@ interface ResourceDetailClientProps {
 
 export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
   const { t, locale } = useLanguage();
+  const { data: previewData, loading: previewLoading } = usePreview(resource.slug, resource.type);
 
   return (
     <div className="section-padding py-8">
@@ -57,8 +58,8 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
           {/* Preview Section */}
           <ResourcePreview
             resourceType={resource.type}
-            previewData={null}
-            loading={false}
+            previewData={previewData}
+            loading={previewLoading}
           />
 
           {/* Description */}
@@ -151,7 +152,11 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
             </div>
 
             {/* Report button */}
-            <div className="mt-2">
+            <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-5">
+              <h3 className="font-heading font-semibold text-sm mb-3">{t.resource.detail.reportModalTitle}</h3>
+              <p className="text-xs text-[var(--text-secondary)] mb-4 leading-relaxed">
+                {t.resource.detail.reportTooltip}
+              </p>
               <ReportButton
                 resourceSlug={resource.slug}
                 resourceName={resource.name}

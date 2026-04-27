@@ -1,4 +1,12 @@
-import { useState, useCallback } from 'react';
+'use client';
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  type ReactNode,
+} from 'react';
 import { api } from '@/lib/api-client';
 import type { User } from '@/types/resource';
 
@@ -10,7 +18,23 @@ function getUserFromStorage(): User | null {
   return stored ? JSON.parse(stored) : null;
 }
 
-export function useAuth() {
+type AuthContextType = {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (
+    email: string,
+    password: string,
+    display_name: string,
+    role?: 'developer' | 'publisher'
+  ) => Promise<{ success: boolean; error?: string }>;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(getUserFromStorage);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,5 +84,26 @@ export function useAuth() {
     setUser(null);
   }, []);
 
-  return { user, loading, error, login, register, logout };
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        login,
+        register,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

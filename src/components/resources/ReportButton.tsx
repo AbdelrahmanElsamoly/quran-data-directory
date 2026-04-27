@@ -1,9 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/i18n';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { ReportModal } from './ReportModal';
 
 interface ReportButtonProps {
@@ -15,25 +15,27 @@ interface ReportButtonProps {
 export function ReportButton({ resourceSlug, resourceName, onReportSubmitted }: ReportButtonProps) {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleOpen = () => {
-    if (!user) {
-      router.push(`/login?redirect=/resources/${resourceSlug}`);
-      return;
-    }
-    setModalOpen(true);
-  };
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted || !user) {
+    return (
+      <Link href={`/login?redirect=/resources/${resourceSlug}`} className="btn-outline block text-center text-sm py-2.5 px-4">
+        {t.resource.detail.loginToReport}
+      </Link>
+    );
+  }
 
   return (
     <>
       <button
-        onClick={handleOpen}
-        className="text-xs text-[var(--text-muted)] hover:text-[var(--error)] inline-flex items-center gap-1.5 transition-colors"
+        onClick={() => setModalOpen(true)}
+        className="block text-center text-sm py-2.5 px-4 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--danger)] text-white hover:bg-[rgba(220,38,38,0.9)] transition-colors duration-200"
         title={t.resource.detail.reportTooltip}
       >
-        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-8a2 2 0 012-2h14a2 2 0 012 2v8l-4-3H7L3 21z" />
         </svg>
         {t.resource.detail.report}

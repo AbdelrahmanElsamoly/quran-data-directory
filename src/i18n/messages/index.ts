@@ -8,6 +8,7 @@ export interface Messages {
     auth: {
       login: string;
       register: string;
+      logout: string;
     };
     langSwitch: {
       ar: string;
@@ -64,6 +65,9 @@ export interface Messages {
       dataset: string;
       api: string;
       tafsir: string;
+      audio: string;
+      pdf: string;
+      json: string;
     };
   };
   resource: {
@@ -97,12 +101,43 @@ export interface Messages {
       noComments: string;
       requestFailed: string;
       loginToRequest: string;
+      loginToReport: string;
       requestSent: string;
       requestReviewed: string;
       accessRequestFor: string;
       accessReason: string;
       submit: string;
       cancel: string;
+      // Report
+      report: string;
+      reportTooltip: string;
+      reportModalTitle: string;
+      reportReason: string;
+      reportReasonInaccurate: string;
+      reportReasonInappropriate: string;
+      reportReasonInfringing: string;
+      reportReasonSpam: string;
+      reportReasonOutdated: string;
+      reportReasonBrokenLink: string;
+      reportDetails: string;
+      reportSubmit: string;
+      reportCancel: string;
+      reportSuccess: string;
+      reportError: string;
+      reportDuplicate: string;
+      // Preview
+      preview: string;
+      previewUnavailable: string;
+      previewCollapse: string;
+      previewExpand: string;
+      previewApiEndpoint: string;
+      previewApiTryIt: string;
+      previewSdkInstall: string;
+      previewSdkCopied: string;
+      previewDatasetRows: string;
+      previewDatasetColumns: string;
+      previewDatasetSize: string;
+      previewJsonFormat: string;
     };
   };
   footer: {

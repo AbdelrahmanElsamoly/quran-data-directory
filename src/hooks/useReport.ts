@@ -10,7 +10,7 @@ export interface UseReportReturn {
   error: string | null;
 }
 
-export function useReport(): UseReportReturn {
+export function useReport(resourceSlug: string): UseReportReturn {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ export function useReport(): UseReportReturn {
     setIsSubmitting(true);
     setError(null);
     try {
-      await api.reports.submit(reason, details);
+      await api.reports.submit(resourceSlug, reason, details);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to submit report';
       setError(message);
@@ -26,7 +26,7 @@ export function useReport(): UseReportReturn {
     } finally {
       setIsSubmitting(false);
     }
-  }, []);
+  }, [resourceSlug]);
 
   return { submitReport, isSubmitting, error };
 }

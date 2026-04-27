@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/lib/api-client';
@@ -14,10 +14,13 @@ interface AccessRequestButtonProps {
 export function AccessRequestButton({ resourceSlug, resourceName }: AccessRequestButtonProps) {
   const { user } = useAuth();
   const t = useTranslations();
+  const [mounted, setMounted] = useState(false);
   const [message, setMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => setMounted(true), []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +34,14 @@ export function AccessRequestButton({ resourceSlug, resourceName }: AccessReques
       setError(t.resource.detail.requestFailed);
     }
   };
+
+  if (!mounted) {
+    return (
+      <Link href="/login" className="btn-outline block text-center text-sm py-2.5 px-4">
+        {t.resource.detail.loginToRequest}
+      </Link>
+    );
+  }
 
   if (!user) {
     return (

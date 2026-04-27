@@ -1,6 +1,6 @@
 // ─── Resource Types ───────────────────────────────────────────────────────
 
-export type ResourceType = 'library' | 'sdk' | 'dataset' | 'api' | 'tafsir';
+export type ResourceType = 'library' | 'sdk' | 'dataset' | 'api' | 'tafsir' | 'audio' | 'pdf' | 'json';
 
 export type ResourceStatus = 'draft' | 'published' | 'archived';
 

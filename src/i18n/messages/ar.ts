@@ -9,6 +9,7 @@ export const ar = {
     auth: {
       login: 'تسجيل الدخول',
       register: 'إنشاء حساب',
+      logout: 'تسجيل الخروج',
     },
     langSwitch: {
       ar: 'عربي',
@@ -71,6 +72,9 @@ export const ar = {
       dataset: 'مجموعة بيانات',
       api: 'واجهة برمجة',
       tafsir: 'تفسير',
+      audio: 'صوت',
+      pdf: 'PDF',
+      json: 'JSON',
     },
   },
 
@@ -136,6 +140,7 @@ export const ar = {
       noComments: 'لا توجد تعليقات بعد',
       requestFailed: 'فشل في إرسال الطلب. حاول مرة أخرى.',
       loginToRequest: 'تسجيل الدخول لطلب الوصول',
+      loginToReport: 'تسجيل الدخول للإبلاغ',
       requestSent: 'تم إرسال طلب الوصول بنجاح',
       requestReviewed: 'سيتم مراجعة طلبك قريباً',
       accessRequestFor: 'طلب الوصول لـ',

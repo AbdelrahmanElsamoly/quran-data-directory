@@ -1,15 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/i18n';
+import { useAuth } from '@/hooks/useAuth';
 
 export function Header() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { locale, setLocale, t } = useLanguage();
+  const { user, logout } = useAuth();
+
+  useEffect(() => setMounted(true), []);
 
   const toggleLocale = () => {
     setLocale(locale === 'ar' ? 'en' : 'ar');
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
   };
 
   return (
@@ -54,12 +66,23 @@ export function Header() {
               <span>{locale === 'ar' ? t.header.langSwitch.en : t.header.langSwitch.ar}</span>
             </button>
 
-            <Link href="/login" className="btn-outline">
-              {t.header.auth.login}
-            </Link>
-            <Link href="/register" className="btn-primary">
-              {t.header.auth.register}
-            </Link>
+            {mounted && (user ? (
+              <button
+                onClick={handleLogout}
+                className="btn-outline"
+              >
+                {t.header.auth.logout}
+              </button>
+            ) : (
+              <>
+                <Link href="/login" className="btn-outline">
+                  {t.header.auth.login}
+                </Link>
+                <Link href="/register" className="btn-primary">
+                  {t.header.auth.register}
+                </Link>
+              </>
+            ))}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -104,12 +127,23 @@ export function Header() {
               {t.header.nav.dashboard}
             </Link>
             <div className="flex flex-col gap-2 pt-2">
-              <Link href="/login" className="btn-outline w-full text-center">
-                {t.header.auth.login}
-              </Link>
-              <Link href="/register" className="btn-primary w-full text-center">
-                {t.header.auth.register}
-              </Link>
+              {mounted && (user ? (
+                <button
+                  onClick={handleLogout}
+                  className="btn-outline w-full text-center"
+                >
+                  {t.header.auth.logout}
+                </button>
+              ) : (
+                <>
+                  <Link href="/login" className="btn-outline w-full text-center">
+                    {t.header.auth.login}
+                  </Link>
+                  <Link href="/register" className="btn-primary w-full text-center">
+                    {t.header.auth.register}
+                  </Link>
+                </>
+              ))}
             </div>
           </div>
         )}

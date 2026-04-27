@@ -17,6 +17,9 @@ export function ResourceBadge({ type, className }: BadgeProps) {
     dataset: 'bg-teal-100 text-teal-800',
     api: 'bg-orange-100 text-orange-800',
     tafsir: 'bg-amber-100 text-amber-800',
+    audio: 'bg-pink-100 text-pink-800',
+    pdf: 'bg-red-100 text-red-800',
+    json: 'bg-green-100 text-green-800',
   };
 
   const labels: Record<ResourceType, string> = {
@@ -25,6 +28,9 @@ export function ResourceBadge({ type, className }: BadgeProps) {
     dataset: t.catalog.types.dataset,
     api: t.catalog.types.api,
     tafsir: t.catalog.types.tafsir,
+    audio: t.catalog.types.audio,
+    pdf: t.catalog.types.pdf,
+    json: t.catalog.types.json,
   };
 
   return (

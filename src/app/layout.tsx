@@ -3,6 +3,7 @@ import { Amiri, Playfair_Display } from 'next/font/google';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { LanguageProvider } from '@/i18n';
+import { AuthProvider } from '@/hooks/useAuth';
 import '@/styles/globals.css';
 
 const amiri = Amiri({
@@ -37,9 +38,11 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={`${amiri.variable} ${playfairDisplay.variable}`}>
       <body className="min-h-screen flex flex-col bg-[var(--bg-primary)]">
         <LanguageProvider>
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>
