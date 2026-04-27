@@ -74,6 +74,16 @@ export interface Messages {
     itqanBadge: string;
     details: string;
     github: string;
+    version: string;
+    githubStats: {
+      title: string;
+      stars: string;
+      forks: string;
+      openIssues: string;
+      lastCommit: string;
+      viewOnGithub: string;
+      statsUnavailable: string;
+    };
     detail: {
       home: string;
       resources: string;
@@ -83,6 +93,7 @@ export interface Messages {
       type: string;
       created: string;
       updated: string;
+      version: string;
       documentation: string;
       accessRequest: string;
       accessRequestDescription: string;
