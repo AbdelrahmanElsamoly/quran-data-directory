@@ -17,6 +17,20 @@ export interface Resource {
   status: ResourceStatus;
   created_at: string;
   updated_at: string;
+
+  // Preview fields (filled by publishers, auto-fetched as fallback)
+  api_endpoint?: string | null;
+  api_docs?: string | null;
+  api_test_url?: string | null;
+  sdk_install_command?: string | null;
+  sdk_examples?: string | null;
+  dataset_sample_data?: string | null;
+  dataset_stats?: string | null;
+  audio_url?: string | null;
+  audio_thumbnail?: string | null;
+  pdf_url?: string | null;
+  pdf_excerpt?: string | null;
+  json_content?: string | null;
 }
 
 // ─── Comment Types ────────────────────────────────────────────────────────
@@ -47,7 +61,7 @@ export interface AccessRequest {
 
 // ─── Report Types ─────────────────────────────────────────────────────────
 
-export type ReportReason = 'inaccurate' | 'inappropriate' | 'infringing';
+export type ReportReason = 'inaccurate' | 'inappropriate' | 'infringing' | 'spam' | 'outdated' | 'broken-link';
 
 export type ReportStatus = 'open' | 'resolved' | 'closed';
 
