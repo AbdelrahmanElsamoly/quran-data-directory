@@ -25,6 +25,8 @@ const mockUserResources: Resource[] = [
     status: 'published',
     created_at: '2026-03-01T10:00:00Z',
     updated_at: '2026-04-10T14:00:00Z',
+    version: null,
+    github_stats: null,
   },
 ];
 
@@ -63,6 +65,8 @@ export default function DashboardResourcesPage() {
       status: 'draft',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      version: null,
+      github_stats: null,
     };
     setResources((prev) => [newResource, ...prev]);
     setShowForm(false);

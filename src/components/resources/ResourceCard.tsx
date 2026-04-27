@@ -40,7 +40,14 @@ export function ResourceCard({ resource }: ResourceCardProps) {
       </p>
 
       <div className="flex items-center justify-between pt-3 border-t border-[var(--border-color)]">
-        <span className="text-xs text-[var(--text-muted)]">{resource.license}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[var(--text-muted)]">{resource.license}</span>
+          {resource.version && (
+            <span className="text-xs text-[var(--text-muted)] bg-[var(--bg-secondary)] px-2 py-0.5 rounded">
+              {resource.version}
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-3">
           {resource.github_url && (
             <a
