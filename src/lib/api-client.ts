@@ -8,6 +8,7 @@ import type {
   Comment,
   AccessRequest,
   Report,
+  ReportReason,
   APIKey,
   User,
   PaginatedResponse,
@@ -231,7 +232,7 @@ async function generateApiKey(resourceSlug: string): Promise<APIKey> {
 
 async function submitReport(
   resourceSlug: string,
-  reason: string,
+  reason: ReportReason,
   details: string
 ) {
   if (DATA_MODE === 'mock') {
