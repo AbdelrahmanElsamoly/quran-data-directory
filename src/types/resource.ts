@@ -17,6 +17,8 @@ export interface Resource {
   status: ResourceStatus;
   created_at: string;
   updated_at: string;
+  version: string | null;
+  github_stats: GithubStats | null;
 
   // Preview fields (filled by publishers, auto-fetched as fallback)
   api_endpoint?: string | null;
@@ -31,6 +33,13 @@ export interface Resource {
   pdf_url?: string | null;
   pdf_excerpt?: string | null;
   json_content?: string | null;
+}
+
+export interface GithubStats {
+  stars: number;
+  forks: number;
+  open_issues: number;
+  last_commit: string;  // ISO 8601
 }
 
 // ─── Comment Types ────────────────────────────────────────────────────────
