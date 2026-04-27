@@ -42,6 +42,7 @@ export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR guard: isClient must be false initially to prevent flash of server-rendered content
     setIsClient(true);
     if (!user) {
       router.push('/login');

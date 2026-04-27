@@ -27,10 +27,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   const messages = allMessages[locale];
 
-  // Load saved locale on mount
-  useEffect(() => {
+ useEffect(() => {
     const saved = localStorage.getItem('ratq_locale') as Locale | null;
     if (saved && (saved === 'ar' || saved === 'en')) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialize locale from localStorage on mount; SSR-safe because useState initializer runs on server with fallback
       setLocaleState(saved);
     }
   }, []);

@@ -38,6 +38,7 @@ export default function DashboardResourcesPage() {
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR guard: isClient must be false initially to prevent flash of server-rendered content
     setIsClient(true);
     if (!user) {
       router.push('/login');

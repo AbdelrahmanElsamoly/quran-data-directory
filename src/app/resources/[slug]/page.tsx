@@ -8,8 +8,13 @@ export function generateStaticParams() {
   }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const resource = mockResources.find((r) => r.slug === params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const resource = mockResources.find((r) => r.slug === slug);
   if (!resource) return { title: 'Resource Not Found' };
 
   return {
@@ -20,8 +25,13 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 
 export const revalidate = 600; // ISR: revalidate every 10 minutes
 
-export default function ResourceDetailPage({ params }: { params: { slug: string } }) {
-  const resource = mockResources.find((r) => r.slug === params.slug);
+export default async function ResourceDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const resource = mockResources.find((r) => r.slug === slug);
 
   if (!resource) {
     notFound();
