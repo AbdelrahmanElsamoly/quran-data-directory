@@ -6,6 +6,9 @@ import { formatDate } from '@/lib/utils';
 import { AccessRequestButton } from '@/components/resources/AccessRequestButton';
 import { RelatedResources } from '@/components/resources/RelatedResources';
 import { CommentSection } from '@/components/resources/CommentSection';
+import { ReportButton } from '@/components/resources/ReportButton';
+import { ResourcePreview } from '@/components/resources/ResourcePreview';
+import { usePreview } from '@/hooks/usePreview';
 import { useLanguage } from '@/i18n';
 import type { Resource } from '@/types/resource';
 
@@ -50,6 +53,13 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
               {t.catalog.types[resource.type]}
             </p>
           </header>
+
+          {/* Preview Section */}
+          <ResourcePreview
+            resourceType={resource.type}
+            previewData={null}
+            loading={false}
+          />
 
           {/* Description */}
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-6 mb-6">
@@ -135,6 +145,14 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
                 {t.resource.detail.accessRequestDescription}
               </p>
               <AccessRequestButton
+                resourceSlug={resource.slug}
+                resourceName={resource.name}
+              />
+            </div>
+
+            {/* Report button */}
+            <div className="mt-2">
+              <ReportButton
                 resourceSlug={resource.slug}
                 resourceName={resource.name}
               />
