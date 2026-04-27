@@ -9,6 +9,7 @@ import { CommentSection } from '@/components/resources/CommentSection';
 import { ReportButton } from '@/components/resources/ReportButton';
 import { ResourcePreview } from '@/components/resources/ResourcePreview';
 import { usePreview } from '@/hooks/usePreview';
+import { GithubStatsCard } from '@/components/resources/GithubStatsCard';
 import { useLanguage } from '@/i18n';
 import type { Resource } from '@/types/resource';
 
@@ -79,6 +80,12 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
                 <dd className="text-sm font-medium text-[var(--text-primary)]">{resource.license}</dd>
               </div>
               <div>
+                <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.version}</dt>
+                <dd className="text-sm font-medium text-[var(--text-primary)]">
+                  {resource.version || '—'}
+                </dd>
+              </div>
+              <div>
                 <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.type}</dt>
                 <dd className="text-sm font-medium text-[var(--text-primary)]">
                   {t.catalog.types[resource.type]}
@@ -128,6 +135,14 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
               )}
             </div>
           </div>
+
+          {/* GitHub Stats */}
+          {resource.github_url && (
+            <GithubStatsCard
+              githubUrl={resource.github_url}
+              stats={resource.github_stats}
+            />
+          )}
 
           {/* Comments */}
           <CommentSection resourceId={resource.id} />
