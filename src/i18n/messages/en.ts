@@ -185,4 +185,52 @@ export const en = {
   pagination: {
     of: 'of',
   },
+
+  // About page
+  about: {
+    pageTitle: 'About Us',
+    why: {
+      paragraph1: 'For too long, developers building Quranic software have faced the same struggle — resources scattered across GitHub, personal blogs, and academic portals. No way to verify accuracy. No trusted standard. Publishers with valuable, copyright-protected content had no professional way to manage access or track usage.',
+      paragraph2: 'We are developers, scholars, and publishers who lived this frustration every day. So we built a home for our community — a place where discovery is simple, quality is verified, and collaboration is the norm. This platform is not just a directory. It is the foundation of how we build, share, and grow together.',
+    },
+    whatIs: {
+      paragraph1: 'RATQ is a community-driven hub for discovering, distributing, and governing Quranic development assets. It is a shared space where developers find verified libraries, SDKs, datasets, and APIs — and publishers share their resources with the community.',
+      paragraph2Before: 'Every resource on the platform is reviewed against the ',
+      paragraph2After: ', ensuring accuracy, completeness, and proper attribution. Whether you\'re building a Quranic app, researching translations, or publishing a tafsir dataset, RATQ is where our community comes together to build with trust.',
+      standards: '**Itqan Standards**',
+    },
+    offer: {
+      title: 'What We Offer',
+      items: {
+        catalog: {
+          title: 'A Curated Resource Catalog',
+          description: 'Browse libraries, SDKs, datasets, APIs, tafsir references, and translations, all organized and searchable in one place.',
+        },
+        verification: {
+          title: 'Itqan Standards Verification',
+          description: 'Resources earning the Itqan badge have been reviewed by our community for accuracy, completeness, and proper attribution. You can trust what you build on.',
+        },
+        access: {
+          title: 'Access Management for Publishers',
+          description: 'Share restricted or copyright-protected resources with a structured workflow. Manage access requests, track usage, and maintain control over your content.',
+        },
+        community: {
+          title: 'Community Engagement',
+          description: 'Rate resources, leave comments, and report issues. The platform grows stronger with every contribution from our community.',
+        },
+        tools: {
+          title: 'Developer Tools',
+          description: 'Secure API keys, version tracking, and integration webhooks to streamline your workflow from discovery to deployment.',
+        },
+      },
+    },
+    mission: {
+      title: 'Our Mission',
+      description: 'To empower developers and publishers with a secure, curated, and community-governed space for Quranic development resources — where quality is verified, access is streamlined, and collaboration thrives.',
+    },
+    vision: {
+      title: 'Our Vision',
+      description: 'To become the global standard for trust, accuracy, and collaboration in Quranic software development — a place every developer turns to first, and every publisher calls home.',
+    },
+  },
 };
