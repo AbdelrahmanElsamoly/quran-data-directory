@@ -43,9 +43,9 @@ export function Header() {
             <Link href="/resources" className="text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors">
               {t.header.nav.resources}
             </Link>
-            <a href="#" className="text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors">
+            <Link href="/about" className="text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors">
               {t.header.nav.about}
-            </a>
+            </Link>
             <Link href="/dashboard" className="text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors">
               {t.header.nav.dashboard}
             </Link>
@@ -120,9 +120,9 @@ export function Header() {
             <Link href="/resources" className="block text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)]">
               {t.header.nav.resources}
             </Link>
-            <a href="#" className="block text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)]">
+            <Link href="/about" className="block text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)]">
               {t.header.nav.about}
-            </a>
+            </Link>
             <Link href="/dashboard" className="block text-sm font-heading text-[var(--text-secondary)] hover:text-[var(--accent-primary)]">
               {t.header.nav.dashboard}
             </Link>
