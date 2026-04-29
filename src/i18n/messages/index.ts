@@ -170,6 +170,37 @@ export interface Messages {
   pagination: {
     of: string;
   };
+  about: {
+    pageTitle: string;
+    why: {
+      paragraph1: string;
+      paragraph2: string;
+    };
+    whatIs: {
+      paragraph1: string;
+      paragraph2Before: string;
+      paragraph2After: string;
+      standards: string;
+    };
+    offer: {
+      title: string;
+      items: {
+        catalog: { title: string; description: string };
+        verification: { title: string; description: string };
+        access: { title: string; description: string };
+        community: { title: string; description: string };
+        tools: { title: string; description: string };
+      };
+    };
+    mission: {
+      title: string;
+      description: string;
+    };
+    vision: {
+      title: string;
+      description: string;
+    };
+  };
 }
 
 import { ar as arMessages } from './ar';
