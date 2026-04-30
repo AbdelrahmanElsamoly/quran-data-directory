@@ -16,6 +16,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-01-20T14:30:00Z',
     version: 'v2.4.1',
     github_stats: { stars: 342, forks: 58, open_issues: 7, last_commit: '2026-04-20T10:30:00Z' },
+    total_downloads: 12450,
   },
   {
     id: 2,
@@ -32,6 +33,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-02-15T11:00:00Z',
     version: 'v1.8.0',
     github_stats: { stars: 215, forks: 34, open_issues: 3, last_commit: '2026-04-25T08:15:00Z' },
+    total_downloads: 8930,
   },
   {
     id: 3,
@@ -48,6 +50,7 @@ export const mockResources: Resource[] = [
     updated_at: '2025-12-01T16:00:00Z',
     version: 'v3.0.0',
     github_stats: { stars: 189, forks: 42, open_issues: 12, last_commit: '2026-04-10T14:00:00Z' },
+    total_downloads: 6720,
   },
   {
     id: 4,
@@ -64,6 +67,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-10T09:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 15200,
   },
   {
     id: 5,
@@ -80,6 +84,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-02-28T14:00:00Z',
     version: 'v1.2.3',
     github_stats: { stars: 421, forks: 67, open_issues: 2, last_commit: '2026-04-22T09:45:00Z' },
+    total_downloads: 18340,
   },
   {
     id: 6,
@@ -96,6 +101,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-01-05T10:00:00Z',
     version: 'v1.0.5',
     github_stats: null,
+    total_downloads: 4100,
   },
   {
     id: 7,
@@ -112,6 +118,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-01T12:00:00Z',
     version: 'v2.1.0',
     github_stats: { stars: 156, forks: 23, open_issues: 5, last_commit: '2026-04-18T16:20:00Z' },
+    total_downloads: 9870,
   },
   {
     id: 8,
@@ -128,6 +135,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-02-10T15:00:00Z',
     version: null,
     github_stats: { stars: 95, forks: 18, open_issues: 4, last_commit: '2026-04-15T12:30:00Z' },
+    total_downloads: 5430,
   },
   {
     id: 9,
@@ -144,6 +152,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-15T08:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 7650,
   },
   {
     id: 10,
@@ -160,6 +169,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-01-15T11:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 3200,
   },
   {
     id: 11,
@@ -176,6 +186,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-20T10:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 2100,
   },
   {
     id: 12,
@@ -192,6 +203,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-02-05T14:00:00Z',
     version: 'v4.0.2',
     github_stats: { stars: 278, forks: 45, open_issues: 1, last_commit: '2026-04-26T11:00:00Z' },
+    total_downloads: 11200,
   },
   {
     id: 13,
@@ -208,6 +220,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-01-25T09:00:00Z',
     version: null,
     github_stats: { stars: 134, forks: 29, open_issues: 8, last_commit: '2026-04-12T10:00:00Z' },
+    total_downloads: 4890,
   },
   {
     id: 14,
@@ -224,6 +237,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-18T13:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 3450,
   },
   {
     id: 15,
@@ -240,6 +254,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-02-20T16:00:00Z',
     version: null,
     github_stats: { stars: 203, forks: 38, open_issues: 6, last_commit: '2026-04-19T15:45:00Z' },
+    total_downloads: 7120,
   },
   {
     id: 16,
@@ -256,6 +271,7 @@ export const mockResources: Resource[] = [
     updated_at: '2025-12-20T10:00:00Z',
     version: null,
     github_stats: { stars: 512, forks: 89, open_issues: 15, last_commit: '2026-04-24T08:00:00Z' },
+    total_downloads: 21500,
   },
   {
     id: 17,
@@ -272,6 +288,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-01-30T08:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 2870,
   },
   {
     id: 18,
@@ -288,6 +305,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-05T14:00:00Z',
     version: null,
     github_stats: { stars: 167, forks: 31, open_issues: 3, last_commit: '2026-04-21T13:15:00Z' },
+    total_downloads: 6340,
   },
   {
     id: 19,
@@ -304,6 +322,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-03-22T11:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 5120,
   },
   {
     id: 20,
@@ -320,6 +339,7 @@ export const mockResources: Resource[] = [
     updated_at: '2026-02-12T09:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 4560,
   },
 ];
 
