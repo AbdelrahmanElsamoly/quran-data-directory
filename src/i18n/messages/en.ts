@@ -46,6 +46,36 @@ export const en = {
     },
   },
 
+  // Announcements
+  announcements: {
+    title: 'Announcements',
+    types: {
+      release: 'New Release',
+      new_resource: 'New Resource',
+      maintenance: 'Maintenance',
+      breaking_change: 'Breaking Change',
+    },
+    ago: '{{count}} ago',
+    viewResource: 'View resource',
+    learnMore: 'Learn more',
+    viewChangelog: 'View changelog',
+    noAnnouncements: '',
+  },
+
+  // Trending
+  trending: {
+    title: 'Trending Resources',
+    browseAll: 'Browse all',
+    period7d: '7 days',
+    period30d: '30 days',
+    periodAllTime: 'All-time',
+    downloads: '{{count}} downloads',
+    viewResource: 'View resource',
+    rankFirst: '1st place',
+    rankSecond: '2nd place',
+    rankThird: '3rd place',
+  },
+
   // Catalog page
   catalog: {
     title: 'Resources',

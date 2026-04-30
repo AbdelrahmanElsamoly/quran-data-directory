@@ -46,6 +46,36 @@ export const ar = {
     },
   },
 
+  // الإعلانات
+  announcements: {
+    title: 'الإعلانات',
+    types: {
+      release: 'إصدار جديد',
+      new_resource: 'مورد جديد',
+      maintenance: 'صيانة',
+      breaking_change: 'تغيير جوهري',
+    },
+    ago: 'منذ {{count}}',
+    viewResource: 'عرض المورد',
+    learnMore: 'اعرف المزيد',
+    viewChangelog: 'عرض سجل التغييرات',
+    noAnnouncements: '',
+  },
+
+  // الموارد الرائجة
+  trending: {
+    title: 'الموارد الرائجة',
+    browseAll: 'تصفح الكل',
+    period7d: '7 أيام',
+    period30d: '30 يومًا',
+    periodAllTime: 'كل الأوقات',
+    downloads: '{{count}} تحميل',
+    viewResource: 'عرض المورد',
+    rankFirst: 'المركز الأول',
+    rankSecond: 'المركز الثاني',
+    rankThird: 'المركز الثالث',
+  },
+
   // Catalog page
   catalog: {
     title: 'الموارد',

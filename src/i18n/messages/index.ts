@@ -40,6 +40,32 @@ export interface Messages {
       downloads: string;
     };
   };
+  announcements: {
+    title: string;
+    types: {
+      release: string;
+      new_resource: string;
+      maintenance: string;
+      breaking_change: string;
+    };
+    ago: string;
+    viewResource: string;
+    learnMore: string;
+    viewChangelog: string;
+    noAnnouncements: string;
+  };
+  trending: {
+    title: string;
+    browseAll: string;
+    period7d: string;
+    period30d: string;
+    periodAllTime: string;
+    downloads: string;
+    viewResource: string;
+    rankFirst: string;
+    rankSecond: string;
+    rankThird: string;
+  };
   catalog: {
     title: string;
     subtitle: string;
