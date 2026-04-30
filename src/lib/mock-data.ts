@@ -1,4 +1,5 @@
 import type { Resource, Comment, GithubStats } from '@/types/resource';
+import type { Announcement } from '@/types/announcement';
 
 export const mockResources: Resource[] = [
   {
@@ -17,6 +18,7 @@ export const mockResources: Resource[] = [
     version: 'v2.4.1',
     github_stats: { stars: 342, forks: 58, open_issues: 7, last_commit: '2026-04-20T10:30:00Z' },
     total_downloads: 12450,
+    downloads: 2840,
   },
   {
     id: 2,
@@ -34,6 +36,7 @@ export const mockResources: Resource[] = [
     version: 'v1.8.0',
     github_stats: { stars: 215, forks: 34, open_issues: 3, last_commit: '2026-04-25T08:15:00Z' },
     total_downloads: 8930,
+    downloads: 1920,
   },
   {
     id: 3,
@@ -51,6 +54,7 @@ export const mockResources: Resource[] = [
     version: 'v3.0.0',
     github_stats: { stars: 189, forks: 42, open_issues: 12, last_commit: '2026-04-10T14:00:00Z' },
     total_downloads: 6720,
+    downloads: 1560,
   },
   {
     id: 4,
@@ -68,6 +72,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 15200,
+    downloads: 1240,
   },
   {
     id: 5,
@@ -85,6 +90,7 @@ export const mockResources: Resource[] = [
     version: 'v1.2.3',
     github_stats: { stars: 421, forks: 67, open_issues: 2, last_commit: '2026-04-22T09:45:00Z' },
     total_downloads: 18340,
+    downloads: 980,
   },
   {
     id: 6,
@@ -102,6 +108,7 @@ export const mockResources: Resource[] = [
     version: 'v1.0.5',
     github_stats: null,
     total_downloads: 4100,
+    downloads: 750,
   },
   {
     id: 7,
@@ -119,6 +126,7 @@ export const mockResources: Resource[] = [
     version: 'v2.1.0',
     github_stats: { stars: 156, forks: 23, open_issues: 5, last_commit: '2026-04-18T16:20:00Z' },
     total_downloads: 9870,
+    downloads: 620,
   },
   {
     id: 8,
@@ -136,6 +144,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: { stars: 95, forks: 18, open_issues: 4, last_commit: '2026-04-15T12:30:00Z' },
     total_downloads: 5430,
+    downloads: 480,
   },
   {
     id: 9,
@@ -153,6 +162,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 7650,
+    downloads: 350,
   },
   {
     id: 10,
@@ -170,6 +180,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 3200,
+    downloads: 290,
   },
   {
     id: 11,
@@ -187,6 +198,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 2100,
+    downloads: 210,
   },
   {
     id: 12,
@@ -204,6 +216,7 @@ export const mockResources: Resource[] = [
     version: 'v4.0.2',
     github_stats: { stars: 278, forks: 45, open_issues: 1, last_commit: '2026-04-26T11:00:00Z' },
     total_downloads: 11200,
+    downloads: 180,
   },
   {
     id: 13,
@@ -221,6 +234,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: { stars: 134, forks: 29, open_issues: 8, last_commit: '2026-04-12T10:00:00Z' },
     total_downloads: 4890,
+    downloads: 145,
   },
   {
     id: 14,
@@ -238,6 +252,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 3450,
+    downloads: 98,
   },
   {
     id: 15,
@@ -255,6 +270,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: { stars: 203, forks: 38, open_issues: 6, last_commit: '2026-04-19T15:45:00Z' },
     total_downloads: 7120,
+    downloads: 72,
   },
   {
     id: 16,
@@ -272,6 +288,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: { stars: 512, forks: 89, open_issues: 15, last_commit: '2026-04-24T08:00:00Z' },
     total_downloads: 21500,
+    downloads: 45,
   },
   {
     id: 17,
@@ -289,6 +306,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 2870,
+    downloads: 30,
   },
   {
     id: 18,
@@ -306,6 +324,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: { stars: 167, forks: 31, open_issues: 3, last_commit: '2026-04-21T13:15:00Z' },
     total_downloads: 6340,
+    downloads: 18,
   },
   {
     id: 19,
@@ -323,6 +342,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 5120,
+    downloads: 12,
   },
   {
     id: 20,
@@ -340,6 +360,7 @@ export const mockResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 4560,
+    downloads: 5,
   },
 ];
 
@@ -408,3 +429,68 @@ export const mockPaginated = <T>(items: T[], pageSize: number, page: number) => 
     results: items.slice(start, end),
   };
 };
+
+export const mockAnnouncements: Announcement[] = [
+  {
+    id: '1',
+    type: 'release',
+    title: 'Quran API v2.1 Released',
+    description: 'New endpoints for surah-level search and improved translation matching.',
+    resource_id: 'quran-api',
+    cta_url: '/resources/quran-api',
+    cta_label: 'View resource',
+    created_at: '2026-04-28T10:00:00Z',
+    is_active: true,
+  },
+  {
+    id: '2',
+    type: 'new_resource',
+    title: 'New: Quranic Text Toolkit (QTT) SDK',
+    description: 'A comprehensive SDK for Quranic text processing and analysis.',
+    resource_id: 'quranic-text-toolkit',
+    cta_url: '/resources/quranic-text-toolkit',
+    cta_label: 'View resource',
+    created_at: '2026-04-27T14:30:00Z',
+    is_active: true,
+  },
+  {
+    id: '3',
+    type: 'maintenance',
+    title: 'Scheduled Maintenance: April 30',
+    description: 'Platform maintenance from 2:00 AM to 4:00 AM UTC. Expect brief downtime.',
+    created_at: '2026-04-26T08:00:00Z',
+    expires_at: '2026-04-30T04:00:00Z',
+    is_active: true,
+  },
+  {
+    id: '4',
+    type: 'breaking_change',
+    title: 'API v1 Deprecation Notice',
+    description: 'API v1 will be retired on June 1, 2026. Migrate to v2 endpoints.',
+    created_at: '2026-04-25T09:00:00Z',
+    expires_at: '2026-06-01T00:00:00Z',
+    is_active: true,
+  },
+  {
+    id: '5',
+    type: 'release',
+    title: 'Arabic NLP Dataset v1.0',
+    description: 'New annotated dataset for Arabic Quranic text classification.',
+    resource_id: 'arabic-nlp-dataset',
+    cta_url: '/resources/arabic-nlp-dataset',
+    cta_label: 'View resource',
+    created_at: '2026-04-24T12:00:00Z',
+    is_active: true,
+  },
+  {
+    id: '6',
+    type: 'new_resource',
+    title: 'New: Tafsir Ibn Kathir Digital Edition',
+    description: 'Complete digital edition of Tafsir Ibn Kathir with search and cross-references.',
+    resource_id: 'tafsir-ibn-kathir',
+    cta_url: '/resources/tafsir-ibn-kathir',
+    cta_label: 'View resource',
+    created_at: '2026-04-23T16:00:00Z',
+    is_active: true,
+  },
+];

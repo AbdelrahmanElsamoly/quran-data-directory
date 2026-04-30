@@ -34,6 +34,7 @@ export interface Resource {
   pdf_excerpt?: string | null;
   json_content?: string | null;
   total_downloads: number;
+  downloads: number;
 }
 
 export interface GithubStats {

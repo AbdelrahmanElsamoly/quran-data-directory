@@ -28,6 +28,7 @@ const mockUserResources: Resource[] = [
     version: null,
     github_stats: null,
     total_downloads: 0,
+    downloads: 0,
   },
 ];
 
@@ -69,6 +70,7 @@ export default function DashboardResourcesPage() {
       version: null,
       github_stats: null,
       total_downloads: 0,
+      downloads: 0,
     };
     setResources((prev) => [newResource, ...prev]);
     setShowForm(false);
