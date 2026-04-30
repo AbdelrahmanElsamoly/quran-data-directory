@@ -6,6 +6,8 @@ import { SearchBar } from '@/components/resources/SearchBar';
 import { useResources } from '@/hooks/useResources';
 import { ListSkeleton } from '@/components/ui/Skeleton';
 import { useTranslations } from '@/i18n';
+import AnnouncementsCarousel from '@/components/resources/AnnouncementsCarousel';
+import TrendingResources from '@/components/resources/TrendingResources';
 
 export default function HomePage() {
   const { data, isLoading } = useResources({ itqan_badge: 'true', page_size: 6 });
@@ -18,7 +20,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 via-[var(--bg-primary)] to-[var(--sand)]/20" />
         <div className="section-padding pt-14 pb-8 sm:pt-16 sm:pb-10 relative">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--text-primary)] leading-tight mb-6 text-balance">
+            <h1 className="font-amiri text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--text-primary)] leading-snug mb-6 text-balance">
               {t.home.hero.title}
             </h1>
             <p className="text-lg text-[var(--text-secondary)] leading-relaxed mb-8 max-w-2xl mx-auto text-balance">
@@ -83,6 +85,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* NEW: Announcements Carousel */}
+      <AnnouncementsCarousel />
+
+      {/* NEW: Trending Resources */}
+      <TrendingResources />
 
       {/* Featured Resources */}
       <section className="section-padding pb-16">
