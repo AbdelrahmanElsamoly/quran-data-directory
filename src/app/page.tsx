@@ -93,7 +93,7 @@ export default function HomePage() {
       <TrendingResources />
 
       {/* Featured Resources */}
-      <section className="section-padding pb-16">
+      <section className="section-padding pt-8 pb-10">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-heading text-2xl font-bold text-[var(--text-primary)]">

@@ -9,10 +9,11 @@ import type { JSX } from 'react';
 
 const AUTO_ROTATE_MS = 8000;
 
-const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; icon: JSX.Element }> = {
+const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; dotColor: string; icon: JSX.Element }> = {
   release: {
     labelKey: 'announcements.types.release',
     color: 'bg-blue-100 text-blue-800',
+    dotColor: 'bg-blue-800',
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
@@ -22,6 +23,7 @@ const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; ic
   new_resource: {
     labelKey: 'announcements.types.new_resource',
     color: 'bg-green-100 text-green-800',
+    dotColor: 'bg-green-800',
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -31,6 +33,7 @@ const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; ic
   maintenance: {
     labelKey: 'announcements.types.maintenance',
     color: 'bg-yellow-100 text-yellow-800',
+    dotColor: 'bg-yellow-800',
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94 1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -41,6 +44,7 @@ const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; ic
   breaking_change: {
     labelKey: 'announcements.types.breaking_change',
     color: 'bg-red-100 text-red-800',
+    dotColor: 'bg-red-800',
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -136,7 +140,7 @@ export default function AnnouncementsCarousel() {
 
   return (
     <section
-      className="section-padding bg-[var(--bg-secondary)]"
+      className="section-padding"
       role="region"
       aria-roledescription="carousel"
       aria-label={t.announcements.title}
@@ -219,7 +223,7 @@ export default function AnnouncementsCarousel() {
                     aria-label={`Announcement ${index + 1}`}
                     onClick={() => { setCurrentIndex(index); setIsPaused(true); }}
                     className={`w-2.5 h-2.5 rounded-full transition-all ${
-                      index === currentIndex ? 'bg-[var(--accent-primary)] w-6' : 'bg-[var(--text-muted)]/30 hover:bg-[var(--text-muted)]/50'
+                      index === currentIndex ? `${config.dotColor} w-6` : 'bg-gray-300 hover:bg-gray-400'
                     }`}
                   />
                 ))}

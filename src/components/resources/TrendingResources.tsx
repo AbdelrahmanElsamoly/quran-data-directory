@@ -20,10 +20,10 @@ export default function TrendingResources() {
   };
 
   return (
-    <section className="section-padding" aria-label={t.trending.title}>
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="section-padding py-8" aria-label={t.trending.title}>
+      <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-heading text-2xl text-[var(--text-primary)]">{t.trending.title}</h2>
+          <h2 className="font-heading text-2xl font-bold text-[var(--text-primary)]">{t.trending.title}</h2>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1" role="tablist" aria-label={t.trending.title}>
               {periods.map((p) => (
@@ -44,9 +44,12 @@ export default function TrendingResources() {
             </div>
             <Link
               href="/resources?sort=downloads"
-              className="text-sm font-medium text-[var(--accent-primary)] hover:underline"
+              className="text-sm font-heading text-[var(--accent-primary)] hover:underline flex items-center gap-1"
             >
               {t.trending.browseAll}
+              <svg className="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         </div>

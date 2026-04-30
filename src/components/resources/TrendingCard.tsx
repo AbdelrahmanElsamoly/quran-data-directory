@@ -13,22 +13,12 @@ interface TrendingCardProps {
 export default function TrendingCard({ resource, rank }: TrendingCardProps) {
   const t = useTranslations();
 
-  const crownIcon = (
-    <svg className="w-5 h-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path d="M10 1l2.5 6.5H18l-5.5 4 2.1 6.5L10 14.4l-4.6 3.6 2.1-6.5L2 7.5h5.5L10 1z" />
-    </svg>
-  );
-
-  const rankBadge = rank === 1 ? (
-    <span className="flex items-center gap-1" aria-label={t.trending.rankFirst}>
-      {crownIcon}
-    </span>
-  ) : (
+  const rankBadge = (
     <span
-      className="flex items-center justify-center w-7 h-7 rounded-full bg-[var(--accent-primary)] text-white text-sm font-bold"
-      aria-label={rank === 2 ? t.trending.rankSecond : t.trending.rankThird}
+      className="flex items-center justify-center w-7 h-7 rounded-full bg-[var(--accent-primary)] text-white text-sm font-bold shrink-0"
+      aria-label={`Rank ${rank}`}
     >
-      {rank}
+      #{rank}
     </span>
   );
 
