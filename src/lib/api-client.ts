@@ -15,8 +15,9 @@ import type {
   ResourceListParams,
   RequestStatus,
 } from '@/types/resource';
+import type { Announcement, TrendingResource } from '@/types/announcement';
 
-import { mockResources, mockComments, mockPaginated } from './mock-data';
+import { mockResources, mockComments, mockPaginated, mockAnnouncements } from './mock-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const DATA_MODE = process.env.NEXT_PUBLIC_DATA_MODE || 'mock';
@@ -274,6 +275,54 @@ function clearAuth() {
   localStorage.removeItem('ratq_refresh_token');
 }
 
+// ─── Announcement Endpoints ──────────────────────────────────────────────
+
+function fetchAnnouncements(): Promise<Announcement[]> {
+  if (DATA_MODE === 'mock') {
+    const now = new Date();
+    return Promise.resolve(
+      mockAnnouncements.filter((a) => {
+        if (!a.is_active) return false;
+        if (a.expires_at && new Date(a.expires_at) < now) return false;
+        return true;
+      })
+    );
+  }
+
+  return fetch(`${API_BASE}/api/announcements/`).then((res) => {
+    if (!res.ok) throw new Error('Failed to fetch announcements');
+    return res.json();
+  });
+}
+
+// ─── Trending Resource Endpoints ─────────────────────────────────────────
+
+function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<TrendingResource[]> {
+  if (DATA_MODE === 'mock') {
+    const sorted = [...mockResources]
+      .filter((r) => r.downloads > 0)
+      .sort((a, b) => b.downloads - a.downloads)
+      .slice(0, 3)
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        type: r.type,
+        description: r.description,
+        version: r.version,
+        license: r.license,
+        downloads: r.downloads,
+      }));
+    return Promise.resolve(sorted);
+  }
+
+  const qs = new URLSearchParams({ period, limit: '3' });
+  return fetch(`${API_BASE}/api/resources/trending/?${qs}`).then((res) => {
+    if (!res.ok) throw new Error('Failed to fetch trending resources');
+    return res.json();
+  });
+}
+
 // ─── Export ───────────────────────────────────────────────────────────────
 
 export const api = {
@@ -284,6 +333,8 @@ export const api = {
   apiKeys: { generate: generateApiKey },
   reports: { submit: submitReport },
   authHelpers: { getAccessToken, setAuthTokens, clearAuth },
+  announcements: { list: fetchAnnouncements },
+  trending: { list: fetchTrendingResources },
 };
 
 export { DATA_MODE };
