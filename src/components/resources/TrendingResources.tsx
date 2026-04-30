@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useTranslations } from '@/i18n';
 import { useTrendingResources } from '@/hooks/useTrendingResources';
 import { ResourceCard } from './ResourceCard';
-import type { Resource } from '@/types/resource';
+import type { Resource, ResourceType } from '@/types/resource';
 
 export default function TrendingResources() {
   const t = useTranslations();
@@ -75,15 +75,15 @@ export default function TrendingResources() {
                   id: resource.id,
                   name: resource.name,
                   slug: resource.slug,
-                  type: resource.type as import('@/types/resource').ResourceType,
+                  type: resource.type as ResourceType,
                   description: resource.description,
                   documentation_url: null,
                   github_url: null,
                   license: resource.license,
                   itqan_badge: false,
                   status: 'published' as const,
-                  created_at: '',
-                  updated_at: '',
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString(),
                   version: resource.version,
                   github_stats: null,
                   total_downloads: resource.downloads,
