@@ -7,17 +7,35 @@ import { useTranslations } from '@/i18n';
 
 interface ResourceCardProps {
   resource: Resource;
+  rank?: number;
+  downloadCount?: number;
 }
 
-export function ResourceCard({ resource }: ResourceCardProps) {
+export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProps) {
   const t = useTranslations();
+
+  const rankBadge = rank != null ? (
+    <span
+      className="flex items-center justify-center w-7 h-7 rounded-full bg-[var(--accent-primary)] text-white text-sm font-bold shrink-0"
+      aria-label={`Rank ${rank}`}
+      dir="ltr"
+    >
+      #{rank}
+    </span>
+  ) : null;
+
   const descriptionPreview = resource.description.length > 180
     ? resource.description.slice(0, 180) + '…'
     : resource.description;
 
   return (
-    <article className="card p-5 flex flex-col h-full">
-      <div className="flex items-center gap-2 mb-3">
+    <article className="card group relative p-5 flex flex-col h-full">
+      <div className={`flex items-center gap-2 mb-3 ${rank != null ? 'pt-8' : ''}`}>
+        {rankBadge && (
+          <span className="absolute top-3 left-3 rtl:right-3 rtl:left-auto z-10">
+            {rankBadge}
+          </span>
+        )}
         <ResourceBadge type={resource.type} />
         {resource.itqan_badge && (
           <span className="badge bg-[var(--accent-gold-light)] text-[var(--accent-gold)]" title="Itqan Verified">
@@ -41,6 +59,14 @@ export function ResourceCard({ resource }: ResourceCardProps) {
 
       <div className="flex items-center justify-between pt-3 border-t border-[var(--border-color)]">
         <div className="flex items-center gap-2">
+          {downloadCount != null && (
+            <span className="text-xs text-[var(--text-muted)]">
+              {downloadCount.toLocaleString()} downloads
+            </span>
+          )}
+          {downloadCount != null && resource.license && (
+            <span className="text-[var(--text-muted)]">•</span>
+          )}
           <span className="text-xs text-[var(--text-muted)]">{resource.license}</span>
           {resource.version && (
             <span className="text-xs text-[var(--text-muted)] bg-[var(--bg-secondary)] px-2 py-0.5 rounded">
