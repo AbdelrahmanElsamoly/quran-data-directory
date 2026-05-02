@@ -299,9 +299,10 @@ function fetchAnnouncements(): Promise<Announcement[]> {
 
 function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<TrendingResource[]> {
   if (DATA_MODE === 'mock') {
+    const isAllTime = period === 'all-time';
     const sorted = [...mockResources]
-      .filter((r) => r.downloads > 0)
-      .sort((a, b) => b.downloads - a.downloads)
+      .filter((r) => (isAllTime ? r.total_downloads > 0 : r.downloads > 0))
+      .sort((a, b) => (isAllTime ? b.total_downloads - a.total_downloads : b.downloads - a.downloads))
       .slice(0, 3)
       .map((r) => ({
         id: r.id,
@@ -311,7 +312,7 @@ function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<Tren
         description: r.description,
         version: r.version,
         license: r.license,
-        downloads: r.downloads,
+        downloads: isAllTime ? r.total_downloads : r.downloads,
       }));
     return Promise.resolve(sorted);
   }
