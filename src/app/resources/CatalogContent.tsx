@@ -4,10 +4,12 @@ import { useSearchParams } from 'next/navigation';
 import { ResourceFilters } from '@/components/resources/ResourceFilters';
 import { ResourceGrid } from '@/components/resources/ResourceGrid';
 import { SearchBar } from '@/components/resources/SearchBar';
+import { SortControls } from '@/components/resources/SortControls';
 import { Pagination } from '@/components/ui/Pagination';
 import { useResources } from '@/hooks/useResources';
 import { ListSkeleton } from '@/components/ui/Skeleton';
 import { useTranslations } from '@/i18n';
+import type { SortOption } from '@/types/resource';
 
 export function CatalogContent() {
   const searchParams = useSearchParams();
@@ -16,9 +18,10 @@ export function CatalogContent() {
   const license = searchParams.get('license') || undefined;
   const itqan_badge = searchParams.get('itqan_badge') || undefined;
   const search = searchParams.get('search') || undefined;
+  const sort = (searchParams.get('sort') || undefined) as SortOption | undefined;
   const page = parseInt(searchParams.get('page') || '1', 10);
 
-  const { data, isLoading } = useResources({ type, license, itqan_badge, search, page });
+  const { data, isLoading } = useResources({ type, license, itqan_badge, search, sort, page });
 
   const showingText = data
     ? search
@@ -46,6 +49,11 @@ export function CatalogContent() {
         <div className="flex gap-6">
           <ResourceFilters />
           <div className="flex-grow min-w-0">
+            {/* Sort Controls */}
+            <div className="mb-4 flex justify-end">
+              <SortControls />
+            </div>
+
             {isLoading ? (
               <ListSkeleton count={9} />
             ) : data?.results.length ? (

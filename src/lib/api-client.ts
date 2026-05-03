@@ -15,8 +15,9 @@ import type {
   ResourceListParams,
   RequestStatus,
 } from '@/types/resource';
+import type { Announcement, TrendingResource } from '@/types/announcement';
 
-import { mockResources, mockComments, mockPaginated } from './mock-data';
+import { mockResources, mockComments, mockPaginated, mockAnnouncements } from './mock-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const DATA_MODE = process.env.NEXT_PUBLIC_DATA_MODE || 'mock';
@@ -51,6 +52,28 @@ async function fetchResources(
       );
     }
 
+    // Apply sorting
+    if (params.sort) {
+      switch (params.sort) {
+        case 'downloads':
+          filtered.sort((a, b) => b.total_downloads - a.total_downloads);
+          break;
+        case 'newest':
+          filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          break;
+        case 'oldest':
+          filtered.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+          break;
+        case 'name_asc':
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'name_desc':
+          filtered.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        // 'relevance' is default - no sorting needed
+      }
+    }
+
     const page = params.page || 1;
     const pageSize = params.page_size || 12;
     return mockPaginated(filtered, pageSize, page);
@@ -61,6 +84,7 @@ async function fetchResources(
   if (params.license) qs.set('license', params.license);
   if (params.itqan_badge !== undefined) qs.set('itqan_badge', params.itqan_badge);
   if (params.search) qs.set('search', params.search);
+  if (params.sort) qs.set('sort', params.sort);
   if (params.page) qs.set('page', String(params.page));
   if (params.page_size) qs.set('page_size', String(params.page_size));
 
@@ -274,6 +298,55 @@ function clearAuth() {
   localStorage.removeItem('ratq_refresh_token');
 }
 
+// ─── Announcement Endpoints ──────────────────────────────────────────────
+
+function fetchAnnouncements(): Promise<Announcement[]> {
+  if (DATA_MODE === 'mock') {
+    const now = new Date();
+    return Promise.resolve(
+      mockAnnouncements.filter((a) => {
+        if (!a.is_active) return false;
+        if (a.expires_at && new Date(a.expires_at) < now) return false;
+        return true;
+      })
+    );
+  }
+
+  return fetch(`${API_BASE}/api/announcements/`).then((res) => {
+    if (!res.ok) throw new Error('Failed to fetch announcements');
+    return res.json();
+  });
+}
+
+// ─── Trending Resource Endpoints ─────────────────────────────────────────
+
+function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<TrendingResource[]> {
+  if (DATA_MODE === 'mock') {
+    const isAllTime = period === 'all-time';
+    const sorted = [...mockResources]
+      .filter((r) => (isAllTime ? r.total_downloads > 0 : r.downloads > 0))
+      .sort((a, b) => (isAllTime ? b.total_downloads - a.total_downloads : b.downloads - a.downloads))
+      .slice(0, 3)
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        type: r.type,
+        description: r.description,
+        version: r.version,
+        license: r.license,
+        downloads: isAllTime ? r.total_downloads : r.downloads,
+      }));
+    return Promise.resolve(sorted);
+  }
+
+  const qs = new URLSearchParams({ period, limit: '3' });
+  return fetch(`${API_BASE}/api/resources/trending/?${qs}`).then((res) => {
+    if (!res.ok) throw new Error('Failed to fetch trending resources');
+    return res.json();
+  });
+}
+
 // ─── Export ───────────────────────────────────────────────────────────────
 
 export const api = {
@@ -284,6 +357,8 @@ export const api = {
   apiKeys: { generate: generateApiKey },
   reports: { submit: submitReport },
   authHelpers: { getAccessToken, setAuthTokens, clearAuth },
+  announcements: { list: fetchAnnouncements },
+  trending: { list: fetchTrendingResources },
 };
 
 export { DATA_MODE };

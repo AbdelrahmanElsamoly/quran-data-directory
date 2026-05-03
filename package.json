@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "next": "16.2.4",
@@ -16,14 +18,20 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.9",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "@testing-library/react": "^16.1.0",
     "@types/node": "^20.14.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "@vitest/ui": "^3.0.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.4",
+    "jsdom": "^26.0.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
   }
 }

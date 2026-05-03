@@ -33,6 +33,8 @@ export interface Resource {
   pdf_url?: string | null;
   pdf_excerpt?: string | null;
   json_content?: string | null;
+  total_downloads: number;
+  downloads: number;
 }
 
 export interface GithubStats {
@@ -118,11 +120,14 @@ export interface PaginatedResponse<T> {
   results: T[];
 }
 
+export type SortOption = 'relevance' | 'downloads' | 'newest' | 'oldest' | 'name_asc' | 'name_desc';
+
 export interface ResourceListParams {
   type?: string;
   license?: string;
   itqan_badge?: string;
   search?: string;
+  sort?: SortOption;
   page?: number;
   page_size?: number;
 }

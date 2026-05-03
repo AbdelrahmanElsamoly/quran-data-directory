@@ -52,9 +52,9 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors">
+                <Link href="/about" className="text-sm text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors">
                   {t.footer.community.about}
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-sm text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors">

@@ -27,6 +27,8 @@ const mockUserResources: Resource[] = [
     updated_at: '2026-04-10T14:00:00Z',
     version: null,
     github_stats: null,
+    total_downloads: 0,
+    downloads: 0,
   },
 ];
 
@@ -67,6 +69,8 @@ export default function DashboardResourcesPage() {
       updated_at: new Date().toISOString(),
       version: null,
       github_stats: null,
+      total_downloads: 0,
+      downloads: 0,
     };
     setResources((prev) => [newResource, ...prev]);
     setShowForm(false);

@@ -40,6 +40,32 @@ export interface Messages {
       downloads: string;
     };
   };
+  announcements: {
+    title: string;
+    types: {
+      release: string;
+      new_resource: string;
+      maintenance: string;
+      breaking_change: string;
+    };
+    ago: string;
+    viewResource: string;
+    learnMore: string;
+    viewChangelog: string;
+    noAnnouncements: string;
+  };
+  trending: {
+    title: string;
+    browseAll: string;
+    period7d: string;
+    period30d: string;
+    periodAllTime: string;
+    downloads: string;
+    viewResource: string;
+    rankFirst: string;
+    rankSecond: string;
+    rankThird: string;
+  };
   catalog: {
     title: string;
     subtitle: string;
@@ -48,6 +74,17 @@ export interface Messages {
     empty: {
       title: string;
       subtitle: string;
+    };
+    sort: {
+      by: string;
+      options: {
+        relevance: string;
+        downloads: string;
+        newest: string;
+        oldest: string;
+        name_asc: string;
+        name_desc: string;
+      };
     };
     filters: {
       title: string;
@@ -169,6 +206,37 @@ export interface Messages {
   };
   pagination: {
     of: string;
+  };
+  about: {
+    pageTitle: string;
+    why: {
+      paragraph1: string;
+      paragraph2: string;
+    };
+    whatIs: {
+      paragraph1: string;
+      paragraph2Before: string;
+      paragraph2After: string;
+      standards: string;
+    };
+    offer: {
+      title: string;
+      items: {
+        catalog: { title: string; description: string };
+        verification: { title: string; description: string };
+        access: { title: string; description: string };
+        community: { title: string; description: string };
+        tools: { title: string; description: string };
+      };
+    };
+    mission: {
+      title: string;
+      description: string;
+    };
+    vision: {
+      title: string;
+      description: string;
+    };
   };
 }
 

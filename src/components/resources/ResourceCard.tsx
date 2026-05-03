@@ -7,16 +7,29 @@ import { useTranslations } from '@/i18n';
 
 interface ResourceCardProps {
   resource: Resource;
+  rank?: number;
+  downloadCount?: number;
 }
 
-export function ResourceCard({ resource }: ResourceCardProps) {
+export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProps) {
   const t = useTranslations();
+
   const descriptionPreview = resource.description.length > 180
     ? resource.description.slice(0, 180) + '…'
     : resource.description;
 
   return (
-    <article className="card p-5 flex flex-col h-full">
+    <article className="card group relative flex flex-col h-full overflow-hidden">
+      {rank != null && (
+        <div
+          className="flex items-center justify-center bg-[var(--accent-primary)] text-white py-3 text-xl font-bold"
+          aria-label={`Rank ${rank}`}
+          dir="ltr"
+        >
+          #{rank}
+        </div>
+      )}
+      <div className="p-5 flex flex-col flex-grow">
       <div className="flex items-center gap-2 mb-3">
         <ResourceBadge type={resource.type} />
         {resource.itqan_badge && (
@@ -41,6 +54,14 @@ export function ResourceCard({ resource }: ResourceCardProps) {
 
       <div className="flex items-center justify-between pt-3 border-t border-[var(--border-color)]">
         <div className="flex items-center gap-2">
+          {downloadCount != null && (
+            <span className="text-xs text-[var(--text-muted)]">
+              {downloadCount.toLocaleString()} downloads
+            </span>
+          )}
+          {downloadCount != null && resource.license && (
+            <span className="text-[var(--text-muted)]">•</span>
+          )}
           <span className="text-xs text-[var(--text-muted)]">{resource.license}</span>
           {resource.version && (
             <span className="text-xs text-[var(--text-muted)] bg-[var(--bg-secondary)] px-2 py-0.5 rounded">
@@ -72,6 +93,7 @@ export function ResourceCard({ resource }: ResourceCardProps) {
             </svg>
           </Link>
         </div>
+      </div>
       </div>
     </article>
   );
