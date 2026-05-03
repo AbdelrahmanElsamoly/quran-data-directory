@@ -75,6 +75,17 @@ export interface Messages {
       title: string;
       subtitle: string;
     };
+    sort: {
+      by: string;
+      options: {
+        relevance: string;
+        downloads: string;
+        newest: string;
+        oldest: string;
+        name_asc: string;
+        name_desc: string;
+      };
+    };
     filters: {
       title: string;
       type: string;

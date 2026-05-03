@@ -120,11 +120,14 @@ export interface PaginatedResponse<T> {
   results: T[];
 }
 
+export type SortOption = 'relevance' | 'downloads' | 'newest' | 'oldest' | 'name_asc' | 'name_desc';
+
 export interface ResourceListParams {
   type?: string;
   license?: string;
   itqan_badge?: string;
   search?: string;
+  sort?: SortOption;
   page?: number;
   page_size?: number;
 }

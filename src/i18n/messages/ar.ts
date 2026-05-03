@@ -86,6 +86,17 @@ export const ar = {
       title: 'لم يتم العثور على موارد',
       subtitle: 'حاول تعديل الفلاتر أو البحث.',
     },
+    sort: {
+      by: 'ترتيب حسب',
+      options: {
+        relevance: 'الأكثر صلة',
+        downloads: 'الأكثر تحميلاً',
+        newest: 'الأحدث أولاً',
+        oldest: 'الأقدم أولاً',
+        name_asc: 'الاسم (أ-ي)',
+        name_desc: 'الاسم (ي-أ)',
+      },
+    },
     filters: {
       title: 'الفلاتر',
       type: 'النوع',

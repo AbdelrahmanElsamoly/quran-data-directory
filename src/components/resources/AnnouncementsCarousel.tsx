@@ -4,38 +4,44 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from '@/i18n';
 import { useAnnouncements } from '@/hooks/useAnnouncements';
-import type { Announcement, AnnouncementType } from '@/types/announcement';
+import type { AnnouncementType } from '@/types/announcement';
 import type { JSX } from 'react';
 
 const AUTO_ROTATE_MS = 8000;
 
-const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; dotColor: string; icon: JSX.Element }> = {
+const typeConfig: Record<
+  AnnouncementType,
+  { labelKey: string; accent: string; badgeBg: string; badgeText: string; icon: JSX.Element }
+> = {
   release: {
     labelKey: 'announcements.types.release',
-    color: 'bg-blue-100 text-blue-800',
-    dotColor: 'bg-blue-800',
+    accent: 'var(--accent-primary)',
+    badgeBg: 'var(--accent-primary-light)',
+    badgeText: 'var(--accent-primary)',
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
       </svg>
     ),
   },
   new_resource: {
     labelKey: 'announcements.types.new_resource',
-    color: 'bg-green-100 text-green-800',
-    dotColor: 'bg-green-800',
+    accent: 'var(--success)',
+    badgeBg: '#dcfce7',
+    badgeText: '#15803d',
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
       </svg>
     ),
   },
   maintenance: {
     labelKey: 'announcements.types.maintenance',
-    color: 'bg-yellow-100 text-yellow-800',
-    dotColor: 'bg-yellow-800',
+    accent: 'var(--warning)',
+    badgeBg: '#fef3c7',
+    badgeText: '#b45309',
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94 1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
@@ -43,10 +49,11 @@ const typeConfig: Record<AnnouncementType, { labelKey: string; color: string; do
   },
   breaking_change: {
     labelKey: 'announcements.types.breaking_change',
-    color: 'bg-red-100 text-red-800',
-    dotColor: 'bg-red-800',
+    accent: 'var(--danger)',
+    badgeBg: '#fee2e2',
+    badgeText: '#b91c1c',
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
       </svg>
     ),
@@ -88,17 +95,19 @@ export default function AnnouncementsCarousel() {
 
   const slides = announcements;
   const isSingle = slides.length <= 1;
+  const total = slides.length;
 
   const goTo = useCallback(
     (index: number) => {
-      setCurrentIndex((index + slides.length) % slides.length);
+      setCurrentIndex((index + total) % total);
     },
-    [slides.length]
+    [total],
   );
 
   const next = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo]);
   const prev = useCallback(() => goTo(currentIndex - 1), [currentIndex, goTo]);
 
+  // Auto-rotation
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     if (!isPaused && !isSingle && slides.length > 1) {
@@ -113,6 +122,7 @@ export default function AnnouncementsCarousel() {
     };
   }, [resetTimer, currentIndex]);
 
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isSingle) return;
@@ -128,93 +138,105 @@ export default function AnnouncementsCarousel() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [prev, next, isSingle]);
 
-  const handlePause = () => setIsPaused(true);
-  const handleResume = () => setIsPaused(false);
-
   if (isLoading || slides.length === 0) {
     return null;
   }
 
   const slide = slides[currentIndex];
   const config = typeConfig[slide.type];
+  const typeLabel = resolveMessage(t, config.labelKey);
 
   return (
     <section
-      className="section-padding"
+      className="section-padding py-10"
       role="region"
       aria-roledescription="carousel"
       aria-label={t.announcements.title}
-      onMouseEnter={handlePause}
-      onMouseLeave={handleResume}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="max-w-6xl mx-auto px-4">
-        <div
-          className={`relative rounded-xl p-6 ${
-            slide.type === 'release'
-              ? 'bg-blue-50 border border-blue-200'
-              : slide.type === 'new_resource'
-              ? 'bg-green-50 border border-green-200'
-              : slide.type === 'maintenance'
-              ? 'bg-yellow-50 border border-yellow-200'
-              : 'bg-red-50 border border-red-200'
-          }`}
-        >
-          <div className="flex items-start gap-4">
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${config.color}`}>
-              {config.icon}
-              {resolveMessage(t, config.labelKey)}
+      <div className="max-w-5xl mx-auto">
+        {/* Section header */}
+        <div className="flex items-center gap-3 mb-5">
+          <svg className="w-5 h-5 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+          </svg>
+          <h2 className="font-heading text-lg font-semibold text-[var(--text-primary)]">
+            {t.announcements.title}
+          </h2>
+          {!isSingle && (
+            <span className="text-xs text-[var(--text-muted)] tabular-nums">
+              {currentIndex + 1} / {total}
             </span>
-            <div className="flex-1">
-              <h3 className="font-heading text-xl text-[var(--text-primary)] mb-1">{slide.title}</h3>
-              <p className="text-sm text-[var(--text-secondary)] mb-2">{slide.description}</p>
-              <div className="flex items-center gap-3">
-                <time
-                  dateTime={slide.created_at}
-                  className="text-xs text-[var(--text-muted)]"
-                >
-                  {formatRelativeTime(slide.created_at, t)}
-                </time>
-                {slide.cta_url && (
-                  <Link
-                    href={slide.cta_url}
-                    className="text-sm font-medium text-[var(--accent-primary)] hover:underline inline-flex items-center gap-1"
-                    role="link"
-                  >
-                    {slide.cta_label || t.announcements.learnMore}
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                )}
-              </div>
+          )}
+        </div>
+
+        {/* Card */}
+        <div className="card relative overflow-hidden">
+          {/* Left accent bar */}
+          <div
+            className="absolute top-0 bottom-0 w-1"
+            style={{ backgroundColor: config.accent }}
+          />
+
+          <div className="p-6 sm:p-8">
+            {/* Badge + timestamp row */}
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <span
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-heading font-medium"
+                style={{ backgroundColor: config.badgeBg, color: config.badgeText }}
+              >
+                {config.icon}
+                {typeLabel}
+              </span>
+              <time dateTime={slide.created_at} className="text-xs text-[var(--text-muted)]">
+                {formatRelativeTime(slide.created_at, t)}
+              </time>
             </div>
+
+            {/* Content */}
+            <h3 className="font-heading text-xl sm:text-2xl font-semibold text-[var(--text-primary)] mb-2 leading-snug">
+              {slide.title}
+            </h3>
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed mb-5">
+              {slide.description}
+            </p>
+
+            {/* CTA */}
+            {slide.cta_url && (
+              <Link
+                href={slide.cta_url}
+                className="inline-flex items-center gap-1.5 text-sm font-heading font-medium text-[var(--accent-primary)] hover:underline group/link"
+              >
+                {slide.cta_label || t.announcements.learnMore}
+                <svg
+                  className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 rtl:rotate-180 rtl:group-hover/link:-translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            )}
           </div>
 
+          {/* Navigation footer */}
           {!isSingle && (
-            <>
-              <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <button
-                  onClick={() => { prev(); setIsPaused(true); }}
-                  className="p-2 rounded-full bg-white/80 hover:bg-white shadow-sm transition-colors"
-                  aria-label="Previous announcement"
-                >
-                  <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-              </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <button
-                  onClick={() => { next(); setIsPaused(true); }}
-                  className="p-2 rounded-full bg-white/80 hover:bg-white shadow-sm transition-colors"
-                  aria-label="Next announcement"
-                >
-                  <svg className="w-5 h-5 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex justify-center gap-1.5 mt-4" role="tablist" aria-label="Announcement slides">
+            <div className="flex items-center justify-between gap-4 px-6 sm:px-8 py-3 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50">
+              {/* Prev */}
+              <button
+                onClick={() => { prev(); setIsPaused(true); }}
+                className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-colors shrink-0"
+                aria-label="Previous announcement"
+              >
+                <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Dots */}
+              <div className="flex items-center gap-1.5" role="tablist" aria-label="Announcement slides">
                 {slides.map((_, index) => (
                   <button
                     key={index}
@@ -222,13 +244,27 @@ export default function AnnouncementsCarousel() {
                     aria-selected={index === currentIndex}
                     aria-label={`Announcement ${index + 1}`}
                     onClick={() => { setCurrentIndex(index); setIsPaused(true); }}
-                    className={`w-2.5 h-2.5 rounded-full transition-all ${
-                      index === currentIndex ? `${config.dotColor} w-6` : 'bg-gray-300 hover:bg-gray-400'
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === currentIndex
+                        ? 'w-6'
+                        : 'w-1.5 bg-[var(--border-color)] hover:bg-[var(--text-muted)]'
                     }`}
+                    style={index === currentIndex ? { backgroundColor: config.accent } : {}}
                   />
                 ))}
               </div>
-            </>
+
+              {/* Next */}
+              <button
+                onClick={() => { next(); setIsPaused(true); }}
+                className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-colors shrink-0"
+                aria-label="Next announcement"
+              >
+                <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           )}
         </div>
       </div>

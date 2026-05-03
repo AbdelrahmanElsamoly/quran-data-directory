@@ -87,6 +87,17 @@ export const en = {
       title: 'No resources found.',
       subtitle: 'Try adjusting your filters or search query.',
     },
+    sort: {
+      by: 'Sort by',
+      options: {
+        relevance: 'Relevance',
+        downloads: 'Most Downloaded',
+        newest: 'Newest First',
+        oldest: 'Oldest First',
+        name_asc: 'Name (A-Z)',
+        name_desc: 'Name (Z-A)',
+      },
+    },
     filters: {
       title: 'Filters',
       type: 'Type',

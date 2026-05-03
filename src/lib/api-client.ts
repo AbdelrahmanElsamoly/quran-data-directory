@@ -52,6 +52,28 @@ async function fetchResources(
       );
     }
 
+    // Apply sorting
+    if (params.sort) {
+      switch (params.sort) {
+        case 'downloads':
+          filtered.sort((a, b) => b.total_downloads - a.total_downloads);
+          break;
+        case 'newest':
+          filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          break;
+        case 'oldest':
+          filtered.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+          break;
+        case 'name_asc':
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'name_desc':
+          filtered.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        // 'relevance' is default - no sorting needed
+      }
+    }
+
     const page = params.page || 1;
     const pageSize = params.page_size || 12;
     return mockPaginated(filtered, pageSize, page);
@@ -62,6 +84,7 @@ async function fetchResources(
   if (params.license) qs.set('license', params.license);
   if (params.itqan_badge !== undefined) qs.set('itqan_badge', params.itqan_badge);
   if (params.search) qs.set('search', params.search);
+  if (params.sort) qs.set('sort', params.sort);
   if (params.page) qs.set('page', String(params.page));
   if (params.page_size) qs.set('page_size', String(params.page_size));
 
