@@ -26,6 +26,7 @@ import {
   mockDeveloperResources,
   mockDeveloperAPIKeys,
   mockDeveloperNotifications,
+  mockDeveloperReports,
 } from './mock-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -288,6 +289,18 @@ async function submitReport(
   return res.json();
 }
 
+async function fetchMyReports(): Promise<Report[]> {
+  if (DATA_MODE === 'mock') {
+    return mockDeveloperReports;
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/reports/my/`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch reports');
+  return res.json();
+}
+
 // ─── Auth Helpers ─────────────────────────────────────────────────────────
 
 function getAccessToken(): string | null {
@@ -535,7 +548,7 @@ export const api = {
   auth: { login, register },
   requests: { submit: submitAccessRequest, myRequests: fetchMyRequests },
   apiKeys: { generate: generateApiKey },
-  reports: { submit: submitReport },
+  reports: { submit: submitReport, myReports: fetchMyReports },
   authHelpers: { getAccessToken, setAuthTokens, clearAuth },
   announcements: { list: fetchAnnouncements },
   trending: { list: fetchTrendingResources },
