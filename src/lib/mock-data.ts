@@ -1,4 +1,4 @@
-import type { Resource, Comment, GithubStats, APIKey, AccessRequest, Report } from '@/types/resource';
+import type { Resource, Comment, GithubStats, APIKey, AccessRequest, Report, NotificationItem } from '@/types/resource';
 import type { Announcement } from '@/types/announcement';
 
 export const mockResources: Resource[] = [
@@ -497,15 +497,6 @@ export const mockAnnouncements: Announcement[] = [
 
 // ─── Developer Mock Data ──────────────────────────────────────────────────
 
-export interface NotificationItem {
-  id: number;
-  type: 'access_approved' | 'access_denied' | 'comment_reply' | 'report_resolved' | 'report_status_change' | 'resource_activity' | 'access_revoked';
-  message: string;
-  resource_name: string;
-  created_at: string;
-  read: boolean;
-}
-
 export const mockDeveloperResources: Resource[] = [
   {
     id: 200,
@@ -733,6 +724,14 @@ export const mockDeveloperNotifications: NotificationItem[] = [
     message: 'تم إلغاء وصول "أحمد خالد" إلى "Verse Search API"',
     resource_name: 'Verse Search API',
     created_at: '2026-04-27T09:00:00Z',
+    read: false,
+  },
+  {
+    id: 607,
+    type: 'report_status_change',
+    message: 'تم تحديث حالة التقرير على "Quranic Keyword Extractor"',
+    resource_name: 'Quranic Keyword Extractor',
+    created_at: '2026-04-29T08:00:00Z',
     read: false,
   },
 ];

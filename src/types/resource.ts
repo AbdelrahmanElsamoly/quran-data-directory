@@ -131,3 +131,14 @@ export interface ResourceListParams {
   page?: number;
   page_size?: number;
 }
+
+// ─── Notification Types ───────────────────────────────────────────────────
+
+export interface NotificationItem {
+  id: number;
+  type: 'access_approved' | 'access_denied' | 'comment_reply' | 'report_resolved' | 'report_status_change' | 'resource_activity' | 'access_revoked';
+  message: string;
+  resource_name: string;
+  created_at: string;
+  read: boolean;
+}
