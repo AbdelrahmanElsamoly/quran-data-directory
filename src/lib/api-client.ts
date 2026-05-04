@@ -14,10 +14,19 @@ import type {
   PaginatedResponse,
   ResourceListParams,
   RequestStatus,
+  NotificationItem,
 } from '@/types/resource';
 import type { Announcement, TrendingResource } from '@/types/announcement';
 
-import { mockResources, mockComments, mockPaginated, mockAnnouncements } from './mock-data';
+import {
+  mockResources,
+  mockComments,
+  mockPaginated,
+  mockAnnouncements,
+  mockDeveloperResources,
+  mockDeveloperAPIKeys,
+  mockDeveloperNotifications,
+} from './mock-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const DATA_MODE = process.env.NEXT_PUBLIC_DATA_MODE || 'mock';
@@ -347,6 +356,177 @@ function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<Tren
   });
 }
 
+// ─── Developer Resource Endpoints ─────────────────────────────────────────
+
+async function fetchDeveloperResources(userId: number): Promise<Resource[]> {
+  if (DATA_MODE === 'mock') {
+    return mockDeveloperResources;
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/resources/`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch developer resources');
+  return res.json();
+}
+
+async function deleteDeveloperResource(resourceSlug: string) {
+  if (DATA_MODE === 'mock') {
+    return { success: true };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/resources/${resourceSlug}/`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error('Failed to delete resource');
+  return res.json();
+}
+
+// ─── Developer API Key Endpoints ──────────────────────────────────────────
+
+async function fetchDeveloperAPIKeys(): Promise<APIKey[]> {
+  if (DATA_MODE === 'mock') {
+    return mockDeveloperAPIKeys;
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/api-keys/`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch API keys');
+  return res.json();
+}
+
+async function createDeveloperApiKey(resourceSlug: string, scope: string): Promise<APIKey> {
+  if (DATA_MODE === 'mock') {
+    return {
+      id: Date.now(),
+      name: `key-${resourceSlug}`,
+      resource_slug: resourceSlug,
+      resource_name: '',
+      key: `ratq_live_${Math.random().toString(36).substring(2, 18)}`,
+      scope,
+      created_at: new Date().toISOString(),
+      last_used_at: null,
+    };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/api-keys/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+    body: JSON.stringify({ resource: resourceSlug, scope }),
+  });
+  if (!res.ok) throw new Error('Failed to create API key');
+  return res.json();
+}
+
+async function revokeDeveloperApiKey(keyId: number) {
+  if (DATA_MODE === 'mock') {
+    return { success: true };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/api-keys/${keyId}/`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error('Failed to revoke API key');
+  return res.json();
+}
+
+// ─── Developer Notifications Endpoints ──────────────────────────────────────
+
+async function fetchDeveloperNotifications(): Promise<NotificationItem[]> {
+  if (DATA_MODE === 'mock') {
+    return mockDeveloperNotifications;
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/notifications/`, {
+    headers: { Authorization: `Bearer ${getAccessToken()}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch notifications');
+  return res.json();
+}
+
+async function markNotificationAsRead(notificationId: number) {
+  if (DATA_MODE === 'mock') {
+    return { success: true };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/notifications/${notificationId}/read/`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error('Failed to mark notification as read');
+  return res.json();
+}
+
+async function markAllNotificationsAsRead() {
+  if (DATA_MODE === 'mock') {
+    return { success: true };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/notifications/read-all/`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error('Failed to mark all notifications as read');
+  return res.json();
+}
+
+// ─── Developer Access Management Endpoints ────────────────────────────────
+
+async function inviteDeveloperByEmail(resourceSlug: string, email: string, scope: string) {
+  if (DATA_MODE === 'mock') {
+    return {
+      id: Date.now(),
+      email,
+      resource_slug: resourceSlug,
+      key: `ratq_live_${Math.random().toString(36).substring(2, 18)}`,
+      scope,
+    };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/resources/${resourceSlug}/invite/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+    body: JSON.stringify({ email, scope }),
+  });
+  if (!res.ok) throw new Error('Failed to send invite');
+  return res.json();
+}
+
+async function revokeDeveloperAccess(resourceSlug: string, userEmail: string) {
+  if (DATA_MODE === 'mock') {
+    return { success: true };
+  }
+
+  const res = await fetch(`${API_BASE}/api/v1/developer/resources/${resourceSlug}/access/`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+    body: JSON.stringify({ email: userEmail }),
+  });
+  if (!res.ok) throw new Error('Failed to revoke access');
+  return res.json();
+}
+
 // ─── Export ───────────────────────────────────────────────────────────────
 
 export const api = {
@@ -359,6 +539,24 @@ export const api = {
   authHelpers: { getAccessToken, setAuthTokens, clearAuth },
   announcements: { list: fetchAnnouncements },
   trending: { list: fetchTrendingResources },
+  // Developer endpoints
+  developer: {
+    resources: { list: fetchDeveloperResources, delete: deleteDeveloperResource },
+    apiKeys: {
+      list: fetchDeveloperAPIKeys,
+      create: createDeveloperApiKey,
+      revoke: revokeDeveloperApiKey,
+    },
+    notifications: {
+      list: fetchDeveloperNotifications,
+      markRead: markNotificationAsRead,
+      markAllRead: markAllNotificationsAsRead,
+    },
+    access: {
+      inviteByEmail: inviteDeveloperByEmail,
+      revoke: revokeDeveloperAccess,
+    },
+  },
 };
 
 export { DATA_MODE };
