@@ -1,4 +1,4 @@
-import type { Resource, Comment, GithubStats } from '@/types/resource';
+import type { Resource, Comment, GithubStats, APIKey, AccessRequest, Report } from '@/types/resource';
 import type { Announcement } from '@/types/announcement';
 
 export const mockResources: Resource[] = [
@@ -492,5 +492,247 @@ export const mockAnnouncements: Announcement[] = [
     cta_label: 'View resource',
     created_at: '2026-04-23T16:00:00Z',
     is_active: true,
+  },
+];
+
+// ─── Developer Mock Data ──────────────────────────────────────────────────
+
+export interface NotificationItem {
+  id: number;
+  type: 'access_approved' | 'access_denied' | 'comment_reply' | 'report_resolved' | 'report_status_change' | 'resource_activity' | 'access_revoked';
+  message: string;
+  resource_name: string;
+  created_at: string;
+  read: boolean;
+}
+
+export const mockDeveloperResources: Resource[] = [
+  {
+    id: 200,
+    name: 'Quranic NLP Toolkit',
+    slug: 'quranic-nlp-toolkit',
+    type: 'library',
+    description: 'A Python library for NLP tasks on Quranic Arabic text including tokenization, POS tagging, and named entity recognition.',
+    documentation_url: 'https://docs.example.com/quranic-nlp',
+    github_url: 'https://github.com/example/quranic-nlp-toolkit',
+    license: 'MIT',
+    itqan_badge: false,
+    status: 'published',
+    created_at: '2026-01-15T10:00:00Z',
+    updated_at: '2026-04-10T14:00:00Z',
+    version: 'v1.2.0',
+    github_stats: { stars: 45, forks: 8, open_issues: 3, last_commit: '2026-04-08T09:00:00Z' },
+    total_downloads: 320,
+    downloads: 42,
+  },
+  {
+    id: 201,
+    name: 'Verse Search API',
+    slug: 'verse-search-api',
+    type: 'api',
+    description: 'RESTful API for searching Quranic verses by keyword, theme, or metadata. Supports Arabic and English queries.',
+    documentation_url: 'https://api.example.com/verse-search/docs',
+    github_url: null,
+    license: 'custom',
+    itqan_badge: true,
+    status: 'published',
+    created_at: '2026-02-01T09:00:00Z',
+    updated_at: '2026-04-20T11:00:00Z',
+    version: null,
+    github_stats: null,
+    total_downloads: 890,
+    downloads: 156,
+  },
+  {
+    id: 202,
+    name: 'Arabic Grammar SDK',
+    slug: 'arabic-grammar-sdk',
+    type: 'sdk',
+    description: 'Mobile SDK for Arabic grammar analysis with Quranic-specific rules and morphological parsing.',
+    documentation_url: 'https://docs.example.com/arabic-grammar-sdk',
+    github_url: 'https://github.com/example/arabic-grammar-sdk',
+    license: 'Apache-2.0',
+    itqan_badge: false,
+    status: 'draft',
+    created_at: '2026-04-01T08:00:00Z',
+    updated_at: '2026-04-25T16:00:00Z',
+    version: 'v0.1.0',
+    github_stats: null,
+    total_downloads: 0,
+    downloads: 0,
+  },
+];
+
+export const mockDeveloperAPIKeys: APIKey[] = [
+  {
+    id: 1,
+    name: 'Production Key',
+    resource_slug: 'quranic-search-api',
+    resource_name: 'Quranic Search API',
+    key: 'ratq_live_abc123def456ghi789',
+    scope: 'read',
+    created_at: '2026-01-10T10:00:00Z',
+    last_used_at: '2026-04-28T14:30:00Z',
+  },
+  {
+    id: 2,
+    name: 'Development Key',
+    resource_slug: 'quranic-search-api',
+    resource_name: 'Quranic Search API',
+    key: 'ratq_test_jkl012mno345pqr678',
+    scope: 'read,write',
+    created_at: '2026-02-15T09:00:00Z',
+    last_used_at: '2026-04-27T11:00:00Z',
+  },
+  {
+    id: 3,
+    name: 'Default Key',
+    resource_slug: 'verse-analytics-api',
+    resource_name: 'Verse Analytics API',
+    key: 'ratq_live_stu901vwx234yz',
+    scope: 'read',
+    created_at: '2026-03-01T08:00:00Z',
+    last_used_at: null,
+  },
+];
+
+export const mockDeveloperRequests: AccessRequest[] = [
+  {
+    id: 301,
+    applicant_name: 'developer@example.com',
+    applicant_display_name: 'محمد أحمد',
+    resource_slug: 'quranic-text-toolkit',
+    resource_name: 'Quranic Text Toolkit (QTT)',
+    status: 'approved',
+    message: 'أحتاج هذا المورد لبحثي في معالجة اللغة العربية.',
+    publisher_notes: 'تمت الموافقة. يرجى مراجعة التوثيق للاستخدام.',
+    created_at: '2026-03-15T10:00:00Z',
+    updated_at: '2026-03-16T09:00:00Z',
+  },
+  {
+    id: 302,
+    applicant_name: 'developer@example.com',
+    applicant_display_name: 'محمد أحمد',
+    resource_slug: 'surah-navigator-sdk',
+    resource_name: 'Surah Navigator SDK',
+    status: 'pending',
+    message: 'أعمل على تطبيق قرآني وأحتاج SDK للتنقل بين السور.',
+    publisher_notes: null,
+    created_at: '2026-04-20T14:00:00Z',
+    updated_at: '2026-04-20T14:00:00Z',
+  },
+  {
+    id: 303,
+    applicant_name: 'developer@example.com',
+    applicant_display_name: 'محمد أحمد',
+    resource_slug: 'classical-arabic-morphology-dataset',
+    resource_name: 'Classical Arabic Morphology Dataset',
+    status: 'denied',
+    message: 'أحتاج هذا المورد لتحليل البيانات.',
+    publisher_notes: 'المورد مخصص للأبحاث المعتمدة فقط.',
+    created_at: '2026-04-10T11:00:00Z',
+    updated_at: '2026-04-12T10:00:00Z',
+  },
+];
+
+export const mockDeveloperReports: Report[] = [
+  {
+    id: 401,
+    reporter_name: 'محمد أحمد',
+    resource_slug: 'quranic-keyword-extractor',
+    reason: 'outdated',
+    details: 'المورد لم يتم تحديثه منذ أكثر من سنة، والتوثيق غير متوافق مع الإصدار الحالي.',
+    status: 'open',
+    created_at: '2026-04-25T10:00:00Z',
+  },
+  {
+    id: 402,
+    reporter_name: 'محمد أحمد',
+    resource_slug: 'arabic-font-rendering-engine',
+    reason: 'broken-link',
+    details: 'رابط التوثيق يعطي خطأ 404.',
+    status: 'resolved',
+    created_at: '2026-03-20T09:00:00Z',
+  },
+  {
+    id: 403,
+    reporter_name: 'محمد أحمد',
+    resource_slug: 'quranic-recitation-audio-dataset',
+    reason: 'inaccurate',
+    details: 'البيانات تحتوي على أخطاء في توقيت الآيات.',
+    status: 'open',
+    created_at: '2026-04-28T15:00:00Z',
+  },
+];
+
+export const mockDeveloperComments: Comment[] = [
+  {
+    id: 501,
+    author_name: 'محمد أحمد',
+    content: 'مكتبة ممتازة! التحليل الصرفي كان مفيداً جداً لمشروع البحث الخاص بي.',
+    created_at: '2026-02-10T14:30:00Z',
+  },
+  {
+    id: 502,
+    author_name: 'محمد أحمد',
+    content: 'هل يمكن إضافة دعم لخط الإنديك؟ هذا سيكون مفيداً جداً للمشاريع التي تستهدف جنوب آسيا.',
+    created_at: '2026-03-05T09:15:00Z',
+  },
+  {
+    id: 503,
+    author_name: 'محمد أحمد',
+    content: 'SDK جيد جداً. المزامنة مع التلاوات ميزة رائعة.',
+    created_at: '2026-01-20T16:45:00Z',
+  },
+];
+
+export const mockDeveloperNotifications: NotificationItem[] = [
+  {
+    id: 601,
+    type: 'access_approved',
+    message: 'تمت الموافقة على طلب الوصول إلى "Quranic Text Toolkit (QTT)"',
+    resource_name: 'Quranic Text Toolkit (QTT)',
+    created_at: '2026-03-16T09:00:00Z',
+    read: true,
+  },
+  {
+    id: 602,
+    type: 'access_denied',
+    message: 'تم رفض طلب الوصول إلى "Classical Arabic Morphology Dataset"',
+    resource_name: 'Classical Arabic Morphology Dataset',
+    created_at: '2026-04-12T10:00:00Z',
+    read: true,
+  },
+  {
+    id: 603,
+    type: 'comment_reply',
+    message: 'رد على تعليقك في "Quranic Text Toolkit (QTT)"',
+    resource_name: 'Quranic Text Toolkit (QTT)',
+    created_at: '2026-03-06T11:00:00Z',
+    read: false,
+  },
+  {
+    id: 604,
+    type: 'report_resolved',
+    message: 'تم حل التقرير على "Arabic Font Rendering Engine"',
+    resource_name: 'Arabic Font Rendering Engine',
+    created_at: '2026-04-01T14:00:00Z',
+    read: false,
+  },
+  {
+    id: 605,
+    type: 'resource_activity',
+    message: 'طلب وصول جديد لـ "Verse Search API"',
+    resource_name: 'Verse Search API',
+    created_at: '2026-04-28T10:00:00Z',
+    read: false,
+  },
+  {
+    id: 606,
+    type: 'access_revoked',
+    message: 'تم إلغاء وصول "أحمد خالد" إلى "Verse Search API"',
+    resource_name: 'Verse Search API',
+    created_at: '2026-04-27T09:00:00Z',
+    read: false,
   },
 ];
