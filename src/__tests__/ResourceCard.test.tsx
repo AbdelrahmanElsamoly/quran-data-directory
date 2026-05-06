@@ -90,13 +90,13 @@ describe('ResourceCard', () => {
     expect(screen.queryByText('Details')).not.toBeInTheDocument();
   });
 
-  it('renders github link when github_url is present', () => {
+  it('renders github button when github_url is present', () => {
     renderWithProvider(
       <ResourceCard resource={createResource({ github_url: 'https://github.com/test/repo' })} />
     );
-    const githubLink = screen.getByLabelText('GitHub');
-    expect(githubLink).toHaveAttribute('href', 'https://github.com/test/repo');
-    expect(githubLink).toHaveAttribute('target', '_blank');
+    const githubButton = screen.getByLabelText('GitHub');
+    expect(githubButton).toHaveAttribute('aria-label', 'GitHub');
+    expect(githubButton.tagName).toBe('BUTTON');
   });
 
   it('clamps description to 2 lines', () => {
