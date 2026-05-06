@@ -46,11 +46,11 @@ describe('ResourceCard', () => {
     expect(screen.getByText('#1')).toBeInTheDocument();
   });
 
-  it('renders download count when downloadCount prop is provided', () => {
+  it('renders download count in metadata row', () => {
     renderWithProvider(
       <ResourceCard resource={createResource()} downloadCount={12345} />
     );
-    expect(screen.getByText('12,345 downloads')).toBeInTheDocument();
+    expect(screen.getByText('12,345')).toBeInTheDocument();
   });
 
   it('renders both rank badge and download count together', () => {
@@ -58,7 +58,7 @@ describe('ResourceCard', () => {
       <ResourceCard resource={createResource()} rank={3} downloadCount={999} />
     );
     expect(screen.getByLabelText('Rank 3')).toBeInTheDocument();
-    expect(screen.getByText('999 downloads')).toBeInTheDocument();
+    expect(screen.getByText('999')).toBeInTheDocument();
   });
 
   it('does not render rank badge when rank prop is omitted', () => {
@@ -73,5 +73,39 @@ describe('ResourceCard', () => {
       <ResourceCard resource={createResource()} />
     );
     expect(container.textContent).not.toContain('downloads');
+  });
+
+  it('wraps card content in a Link to the resource detail page', () => {
+    renderWithProvider(
+      <ResourceCard resource={createResource({ slug: 'my-resource' })} />
+    );
+    const link = screen.getByRole('link', { name: /Test Resource/i });
+    expect(link).toHaveAttribute('href', '/resources/my-resource');
+  });
+
+  it('does not render a separate Details link', () => {
+    renderWithProvider(
+      <ResourceCard resource={createResource()} />
+    );
+    expect(screen.queryByText('Details')).not.toBeInTheDocument();
+  });
+
+  it('renders github link when github_url is present', () => {
+    renderWithProvider(
+      <ResourceCard resource={createResource({ github_url: 'https://github.com/test/repo' })} />
+    );
+    const githubLink = screen.getByLabelText('GitHub');
+    expect(githubLink).toHaveAttribute('href', 'https://github.com/test/repo');
+    expect(githubLink).toHaveAttribute('target', '_blank');
+  });
+
+  it('clamps description to 2 lines', () => {
+    renderWithProvider(
+      <ResourceCard resource={createResource({
+        description: 'This is a very long description that should be clamped to two lines maximum regardless of how much text is provided here to ensure the card stays compact.',
+      })} />
+    );
+    const descriptionEl = screen.getByText(/This is a very long description/i);
+    expect(descriptionEl.closest('p')).toHaveClass('line-clamp-2');
   });
 });
