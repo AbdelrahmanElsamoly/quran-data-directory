@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
-import { Amiri, Playfair_Display } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic, Playfair_Display } from 'next/font/google';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { LanguageProvider } from '@/i18n';
 import { AuthProvider } from '@/hooks/useAuth';
 import '@/styles/globals.css';
 
-const amiri = Amiri({
-  variable: '--font-amiri',
+const plexSansArabic = IBM_Plex_Sans_Arabic({
+  variable: '--font-plex-sans-arabic',
   subsets: ['latin', 'arabic'],
-  weight: ['400', '700'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" className={`${amiri.variable} ${playfairDisplay.variable}`}>
+    <html lang="ar" dir="rtl" className={`${plexSansArabic.variable} ${playfairDisplay.variable}`}>
       <body className="min-h-screen flex flex-col bg-[var(--bg-primary)]">
         <LanguageProvider>
           <AuthProvider>

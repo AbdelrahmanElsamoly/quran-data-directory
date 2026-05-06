@@ -5,7 +5,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        amiri: ['var(--font-amiri)', 'serif'],
+        plexArabic: ['var(--font-plex-sans-arabic)', 'sans-serif'],
         heading: ['var(--font-playfair-display)', 'serif'],
       },
       colors: {
