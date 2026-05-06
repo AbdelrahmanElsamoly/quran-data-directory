@@ -7,6 +7,7 @@ interface ResourceFormProps {
   onSubmit: (data: {
     name: string;
     type: ResourceType;
+    short_description: string;
     description: string;
     license: string;
     itqan_badge: boolean;
@@ -16,6 +17,7 @@ interface ResourceFormProps {
   initial?: {
     name?: string;
     type?: ResourceType;
+    short_description?: string;
     description?: string;
     license?: string;
     itqan_badge?: boolean;
@@ -28,6 +30,7 @@ interface ResourceFormProps {
 export function ResourceForm({ onSubmit, initial, submitLabel = 'Save Resource' }: ResourceFormProps) {
   const [name, setName] = useState(initial?.name || '');
   const [type, setType] = useState<ResourceType>(initial?.type || 'library');
+  const [shortDescription, setShortDescription] = useState(initial?.short_description || '');
   const [description, setDescription] = useState(initial?.description || '');
   const [license, setLicense] = useState(initial?.license || '');
   const [itqan_badge, setItqanBadge] = useState(initial?.itqan_badge || false);
@@ -36,7 +39,7 @@ export function ResourceForm({ onSubmit, initial, submitLabel = 'Save Resource' 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, type, description, license, itqan_badge, github_url, documentation_url });
+    onSubmit({ name, type, short_description: shortDescription, description, license, itqan_badge, github_url, documentation_url });
   };
 
   const resourceTypes: { value: ResourceType; label: string }[] = [
@@ -80,14 +83,29 @@ export function ResourceForm({ onSubmit, initial, submitLabel = 'Save Resource' 
 
       <div>
         <label className="block text-sm font-heading text-[var(--text-secondary)] mb-1">
-          Description *
+          Short Description *
+        </label>
+        <input
+          type="text"
+          value={shortDescription}
+          onChange={(e) => setShortDescription(e.target.value)}
+          className="input-field"
+          required
+          placeholder="Brief one-line summary shown in listings"
+          maxLength={160}
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-heading text-[var(--text-secondary)] mb-1">
+          Full Description *
         </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="input-field min-h-[100px] resize-y"
           required
-          placeholder="Describe this resource…"
+          placeholder="Detailed description shown on the resource detail page…"
         />
       </div>
 

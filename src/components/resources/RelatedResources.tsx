@@ -58,11 +58,6 @@ export function RelatedResources({ currentResourceId }: RelatedResourcesProps) {
 }
 
 function RelatedResourceCard({ resource }: { resource: Resource }) {
-  const descriptionPreview =
-    resource.description.length > 120
-      ? resource.description.slice(0, 120) + '…'
-      : resource.description;
-
   return (
     <Link
       href={`/resources/${resource.slug}`}
@@ -80,7 +75,7 @@ function RelatedResourceCard({ resource }: { resource: Resource }) {
         {resource.name}
       </h3>
       <p className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-2">
-        {descriptionPreview}
+        {resource.short_description || resource.description}
       </p>
     </Link>
   );

@@ -18,6 +18,7 @@ const mockUserResources: Resource[] = [
     slug: 'my-example-library',
     type: 'library',
     description: 'An example resource published by the current user for demonstration purposes.',
+    short_description: 'Example library for demonstration purposes.',
     documentation_url: '',
     github_url: 'https://github.com/example/my-library',
     license: 'MIT',
@@ -52,6 +53,7 @@ export default function DashboardResourcesPage() {
   const handleCreate = (data: {
     name: string;
     type: ResourceType;
+    short_description: string;
     description: string;
     license: string;
     itqan_badge: boolean;
@@ -79,6 +81,7 @@ export default function DashboardResourcesPage() {
   const handleEdit = (data: {
     name: string;
     type: ResourceType;
+    short_description: string;
     description: string;
     license: string;
     itqan_badge: boolean;
@@ -179,6 +182,7 @@ export default function DashboardResourcesPage() {
                 initial={{
                   name: editingResource.name,
                   type: editingResource.type,
+                  short_description: editingResource.short_description,
                   description: editingResource.description,
                   license: editingResource.license,
                   itqan_badge: editingResource.itqan_badge,

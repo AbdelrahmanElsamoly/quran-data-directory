@@ -355,6 +355,7 @@ function fetchTrendingResources(period: '7d' | '30d' | 'all-time'): Promise<Tren
         slug: r.slug,
         type: r.type,
         description: r.description,
+        short_description: r.short_description,
         version: r.version,
         license: r.license,
         downloads: isAllTime ? r.total_downloads : r.downloads,

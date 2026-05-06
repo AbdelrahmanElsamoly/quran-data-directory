@@ -53,7 +53,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
         </h3>
 
         <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-3 line-clamp-2 flex-grow">
-          {resource.description}
+          {resource.short_description || resource.description}
         </p>
 
         <div className="flex items-center justify-between">

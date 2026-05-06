@@ -77,6 +77,7 @@ export default function TrendingResources() {
                   slug: resource.slug,
                   type: resource.type as ResourceType,
                   description: resource.description,
+                  short_description: resource.short_description,
                   documentation_url: null,
                   github_url: null,
                   license: resource.license,

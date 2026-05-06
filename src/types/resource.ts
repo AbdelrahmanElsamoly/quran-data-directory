@@ -10,6 +10,7 @@ export interface Resource {
   slug: string;
   type: ResourceType;
   description: string;
+  short_description: string;
   documentation_url: string | null;
   github_url: string | null;
   license: string;

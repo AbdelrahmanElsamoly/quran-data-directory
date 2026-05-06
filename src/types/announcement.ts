@@ -25,6 +25,7 @@ export interface TrendingResource {
   slug: string;
   type: string;
   description: string;
+  short_description: string;
   version: string | null;
   license: string;
   downloads: number;

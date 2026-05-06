@@ -11,6 +11,7 @@ function createResource(overrides: Partial<Resource> = {}): Resource {
     slug: 'test-resource',
     type: 'api',
     description: 'A test resource description for testing purposes',
+    short_description: 'Test resource summary',
     documentation_url: null,
     github_url: null,
     license: 'MIT',
@@ -99,10 +100,10 @@ describe('ResourceCard', () => {
     expect(githubButton.tagName).toBe('BUTTON');
   });
 
-  it('clamps description to 2 lines', () => {
+  it('clamps short description to 2 lines', () => {
     renderWithProvider(
       <ResourceCard resource={createResource({
-        description: 'This is a very long description that should be clamped to two lines maximum regardless of how much text is provided here to ensure the card stays compact.',
+        short_description: 'This is a very long description that should be clamped to two lines maximum regardless of how much text is provided here to ensure the card stays compact.',
       })} />
     );
     const descriptionEl = screen.getByText(/This is a very long description/i);

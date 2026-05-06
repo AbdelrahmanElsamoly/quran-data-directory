@@ -20,6 +20,7 @@ function createResource(overrides: Partial<Resource> = {}): Resource {
     slug: 'test-resource',
     type: 'api',
     description: 'A test resource',
+    short_description: 'Test resource summary',
     documentation_url: null,
     github_url: null,
     license: 'MIT',
