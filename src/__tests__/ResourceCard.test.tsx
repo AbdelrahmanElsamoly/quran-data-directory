@@ -50,7 +50,7 @@ describe('ResourceCard', () => {
     renderWithProvider(
       <ResourceCard resource={createResource()} downloadCount={12345} />
     );
-    expect(screen.getByText('12,345')).toBeInTheDocument();
+    expect(screen.getByText('12.3k')).toBeInTheDocument();
   });
 
   it('renders both rank badge and download count together', () => {

@@ -11,6 +11,16 @@ interface ResourceCardProps {
   downloadCount?: number;
 }
 
+function formatDownloads(count: number): string {
+  if (count >= 1_000_000) {
+    return `${(count / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
+  }
+  if (count >= 1_000) {
+    return `${(count / 1_000).toFixed(1).replace(/\.0$/, '')}k`;
+  }
+  return count.toString();
+}
+
 export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProps) {
   const t = useTranslations();
 
@@ -49,8 +59,11 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             {downloadCount != null && (
-              <span className="text-xs text-[var(--text-muted)]">
-                {downloadCount.toLocaleString()}
+              <span className="text-xs text-[var(--text-muted)] inline-flex items-center gap-1">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" />
+                </svg>
+                {formatDownloads(downloadCount)}
               </span>
             )}
             {downloadCount != null && resource.license && (

@@ -70,7 +70,7 @@ describe('TrendingResources', () => {
     expect(screen.getByText('Resource A')).toBeInTheDocument();
     expect(screen.getByText('Resource B')).toBeInTheDocument();
     expect(screen.getByText('Resource C')).toBeInTheDocument();
-    expect(screen.getByText('1,000')).toBeInTheDocument();
+    expect(screen.getByText('1k')).toBeInTheDocument();
   });
 
   it('shows period toggle buttons', () => {
