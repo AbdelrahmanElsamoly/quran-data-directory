@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   type ReactNode,
 } from 'react';
 import { allMessages, type Messages } from './messages';
@@ -25,7 +26,10 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('ar');
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
-  const messages = allMessages[locale];
+
+  // Memoize messages so the context value reference is stable across renders
+  // This prevents unnecessary re-renders in all components using useTranslations()
+  const messages = useMemo<Messages>(() => allMessages[locale], [locale]);
 
  useEffect(() => {
     const saved = localStorage.getItem('ratq_locale') as Locale | null;

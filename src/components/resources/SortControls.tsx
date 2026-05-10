@@ -58,10 +58,10 @@ export function SortControls() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const selectedLabel =
-    sortOptions.find((o) => o.value === currentSort)?.key
-      ? t.catalog.sort.options[sortOptions.find((o) => o.value === currentSort)!.key]
-      : t.catalog.sort.options.relevance;
+  const currentOption = sortOptions.find((o) => o.value === currentSort);
+  const selectedLabel = currentOption
+    ? t.catalog.sort.options[currentOption.key]
+    : t.catalog.sort.options.relevance;
 
   return (
     <div className="flex items-center gap-2">
