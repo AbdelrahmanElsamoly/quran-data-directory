@@ -145,11 +145,6 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
             />
           )}
 
-          {/* Trusted By */}
-          {resource.consumers && resource.consumers.length > 0 && (
-            <TrustedBySection consumers={resource.consumers} />
-          )}
-
           {/* Comments */}
           <CommentSection resourceId={resource.id} />
 
@@ -160,6 +155,11 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
         {/* Sidebar (right column in RTL) */}
         <aside className="lg:col-span-1">
           <div className="sticky top-6 space-y-6">
+            {/* Trusted By */}
+            {resource.consumers && resource.consumers.length > 0 && (
+              <TrustedBySection consumers={resource.consumers} />
+            )}
+
             {/* Access request CTA */}
             <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-5">
               <h3 className="font-heading font-semibold text-sm mb-3">{t.resource.detail.accessRequest}</h3>
