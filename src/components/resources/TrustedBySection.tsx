@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useLanguage } from '@/i18n';
 import type { Consumer } from '@/types/resource';
 import { ConsumerAvatar } from './ConsumerAvatar';
