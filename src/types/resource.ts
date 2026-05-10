@@ -20,6 +20,7 @@ export interface Resource {
   updated_at: string;
   version: string | null;
   github_stats: GithubStats | null;
+  consumers?: Consumer[];
 
   // Preview fields (filled by publishers, auto-fetched as fallback)
   api_endpoint?: string | null;
@@ -43,6 +44,13 @@ export interface GithubStats {
   forks: number;
   open_issues: number;
   last_commit: string;  // ISO 8601
+}
+
+export interface Consumer {
+  name: string;
+  logo_url?: string;
+  website_url: string;
+  category?: string;
 }
 
 // ─── Comment Types ────────────────────────────────────────────────────────
