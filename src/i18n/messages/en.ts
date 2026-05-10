@@ -156,7 +156,7 @@ export const en = {
       no: 'No',
       relatedResources: 'Related Resources',
       trustedBy: 'Used By',
-      trustedByCount: 'Trusted by {{count}} {{count, plural, one{application} other{applications}}}',
+      trustedByCount: 'Trusted by {{count}} applications',
       showMore: 'Show more',
       showLess: 'Show less',
       comments: 'Comments',

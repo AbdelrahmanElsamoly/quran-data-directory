@@ -185,7 +185,7 @@ export const ar = {
       previewJsonFormat: 'JSON مُنسق',
       relatedResources: 'موارد ذات صلة',
       trustedBy: 'يُستخدم بواسطة',
-      trustedByCount: 'موثوق من قبل {{count}} {{count, plural, one{تطبيق} other{تطبيق}}}',
+      trustedByCount: 'موثوق من قبل {{count}} تطبيق',
       showMore: 'عرض المزيد',
       showLess: 'عرض أقل',
       comments: 'التعليقات',
