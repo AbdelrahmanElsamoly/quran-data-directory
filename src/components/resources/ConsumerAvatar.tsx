@@ -55,11 +55,11 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
     <img
       src={consumer.logo_url}
       alt={`${consumer.name} logo`}
-      className={`rounded-full object-cover ${sizes.avatar}`}
+      className={`w-full h-full rounded-full object-cover object-center`}
       onError={() => setLogoError(true)}
     />
   ) : (
-    <span className={`rounded-full font-bold text-white ${sizes.avatar}`}>{initials}</span>
+    <span className={`font-bold text-white`}>{initials}</span>
   );
 
   const wrapperClasses = `
@@ -75,7 +75,7 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
         className={wrapperClasses}
       >
         <div
-          className={`rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
+          className={`flex aspect-square items-center justify-center rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
         >
           {avatarContent}
         </div>
@@ -92,7 +92,7 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
   return (
     <div className={wrapperClasses}>
       <div
-        className={`rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
+        className={`flex aspect-square items-center justify-center rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
       >
         {avatarContent}
       </div>
