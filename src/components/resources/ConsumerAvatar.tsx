@@ -5,7 +5,7 @@ import type { Consumer } from '@/types/resource';
 
 interface ConsumerAvatarProps {
   consumer: Consumer;
-  size: 'featured' | 'expanded';
+  size: 'featured' | 'expanded' | 'sidebar';
 }
 
 const sizeMap = {
@@ -16,6 +16,10 @@ const sizeMap = {
   expanded: {
     avatar: 'h-9 w-9 text-sm',      // 36px
     gap: 'gap-1.5',
+  },
+  sidebar: {
+    avatar: 'h-[38px] w-[38px] text-xs',  // 38px
+    gap: 'gap-1',
   },
 };
 
@@ -79,10 +83,12 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
         >
           {avatarContent}
         </div>
-        <span className={`font-medium text-[var(--text-primary)] ${size === 'featured' ? 'text-xs' : 'text-[10px]'}`}>
-          {consumer.name}
-        </span>
-        {size === 'featured' && consumer.category && (
+        {size !== 'sidebar' && (
+          <span className={`font-medium text-[var(--text-primary)] ${size === 'featured' ? 'text-xs' : 'text-[10px]'}`}>
+            {consumer.name}
+          </span>
+        )}
+        {size !== 'sidebar' && consumer.category && (
           <span className="text-[9px] text-[var(--text-muted)]">{consumer.category}</span>
         )}
       </a>
@@ -96,10 +102,12 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
       >
         {avatarContent}
       </div>
-      <span className={`font-medium text-[var(--text-primary)] ${size === 'featured' ? 'text-xs' : 'text-[10px]'}`}>
-        {consumer.name}
-      </span>
-      {size === 'featured' && consumer.category && (
+      {size !== 'sidebar' && (
+        <span className={`font-medium text-[var(--text-primary)] ${size === 'featured' ? 'text-xs' : 'text-[10px]'}`}>
+          {consumer.name}
+        </span>
+      )}
+      {size !== 'sidebar' && consumer.category && (
         <span className="text-[9px] text-[var(--text-muted)]">{consumer.category}</span>
       )}
     </div>
