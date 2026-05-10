@@ -49,8 +49,11 @@ export function ConsumerCard({ consumer, index }: ConsumerCardProps) {
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.style.display = 'none';
-              target.parentElement!.textContent = getInitials(consumer.name);
-              target.parentElement!.className = `flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-lg font-bold text-white`;
+              // Replace image with initials by setting parent content
+              const parent = target.parentElement;
+              if (parent) {
+                parent.textContent = getInitials(consumer.name);
+              }
             }}
           />
         ) : (
