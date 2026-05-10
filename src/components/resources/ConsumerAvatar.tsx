@@ -51,6 +51,7 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
   const isClickable = consumer.website_url && consumer.website_url.startsWith('http');
 
   const avatarContent = consumer.logo_url && !logoError ? (
+    // eslint-disable-next-line @next/next/no-img-element -- consistent with existing ConsumerCard pattern
     <img
       src={consumer.logo_url}
       alt={`${consumer.name} logo`}
