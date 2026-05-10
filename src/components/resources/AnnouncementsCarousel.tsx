@@ -203,22 +203,39 @@ export default function AnnouncementsCarousel() {
             </p>
 
             {/* CTA */}
-            {slide.cta_url && (
-              <Link
-                href={slide.cta_url}
-                className="inline-flex items-center gap-1.5 text-sm font-heading font-medium text-[var(--accent-primary)] hover:underline group/link"
-              >
-                {slide.cta_label || t.announcements.learnMore}
-                <svg
-                  className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 rtl:rotate-180 rtl:group-hover/link:-translate-x-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            <div className="min-h-[36px]">
+              {slide.cta_url ? (
+                <Link
+                  href={slide.cta_url}
+                  className="inline-flex items-center gap-1.5 text-sm font-heading font-medium text-[var(--accent-primary)] hover:underline group/link"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            )}
+                  {slide.cta_label || t.announcements.learnMore}
+                  <svg
+                    className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 rtl:rotate-180 rtl:group-hover/link:-translate-x-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              ) : slide.type === 'breaking_change' && slide.resource_id ? (
+                <Link
+                  href={`/resources/${slide.resource_id}`}
+                  className="inline-flex items-center gap-1.5 text-sm font-heading font-medium text-[var(--accent-primary)] hover:underline group/link"
+                >
+                  {t.announcements.viewResource}
+                  <svg
+                    className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 rtl:rotate-180 rtl:group-hover/link:-translate-x-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              ) : null}
+            </div>
           </div>
 
           {/* Navigation footer */}
