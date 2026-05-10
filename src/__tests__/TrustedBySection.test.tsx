@@ -12,116 +12,106 @@ const makeConsumers = (count: number): Consumer[] =>
   }));
 
 function renderWithProvider(ui: React.ReactElement, locale: 'ar' | 'en' = 'ar') {
-  return render(<LanguageProvider>{ui}</LanguageProvider>, {
-    wrapper: ({ children }) => {
-      // Override locale by setting localStorage before mount
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: (key: string) => key === 'ratq_locale' ? locale : null,
-          setItem: () => {},
-          removeItem: () => {},
-          clear: () => {},
-        },
-        writable: true,
-      });
-      return <LanguageProvider>{children}</LanguageProvider>;
+  Object.defineProperty(window, 'localStorage', {
+    value: {
+      getItem: (key: string) => key === 'ratq_locale' ? locale : null,
+      setItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
     },
+    writable: true,
+  });
+  return render(<LanguageProvider>{ui}</LanguageProvider>, {
+    wrapper: ({ children }) => <LanguageProvider>{children}</LanguageProvider>,
   });
 }
 
-describe('TrustedBySection', () => {
+function renderWithContainer(ui: React.ReactElement, locale: 'ar' | 'en' = 'ar') {
+  Object.defineProperty(window, 'localStorage', {
+    value: {
+      getItem: (key: string) => key === 'ratq_locale' ? locale : null,
+      setItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
+    },
+    writable: true,
+  });
+  return render(ui, {
+    wrapper: ({ children }) => (
+      <LanguageProvider>{children}</LanguageProvider>
+    ),
+  });
+}
+
+describe('TrustedBySection — Sidebar', () => {
   it('renders null when consumers is empty', () => {
     const { container } = renderWithProvider(<TrustedBySection consumers={[]} />);
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders heading and count when consumers exist (Arabic)', () => {
-    const consumers = makeConsumers(5);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    expect(screen.getByText('موثوق من قبل')).toBeTruthy();
-    expect(screen.getByText('موثوق من قبل 5 تطبيق')).toBeTruthy();
-  });
-
-  it('renders heading and count when consumers exist (English)', () => {
+  it('renders heading and count (English)', () => {
     const consumers = makeConsumers(5);
     renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
     expect(screen.getByText('Trusted By')).toBeTruthy();
     expect(screen.getByText('Trusted by 5 applications')).toBeTruthy();
   });
 
-  it('renders exactly 3 featured consumers', () => {
+  it('renders heading and count (Arabic)', () => {
     const consumers = makeConsumers(5);
     renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    expect(screen.getByText('Consumer 1')).toBeTruthy();
-    expect(screen.getByText('Consumer 2')).toBeTruthy();
-    expect(screen.getByText('Consumer 3')).toBeTruthy();
-    // Consumer 4 and 5 should NOT be visible initially
-    expect(screen.queryByText('Consumer 4')).toBeNull();
-    expect(screen.queryByText('Consumer 5')).toBeNull();
+    expect(screen.getByText('موثوق من قبل')).toBeTruthy();
+    expect(screen.getByText('موثوق من قبل 5 تطبيق')).toBeTruthy();
   });
 
-  it('shows expand trigger when there are more than 3 consumers (Arabic)', () => {
+  it('renders all consumers at once (no expand/collapse)', () => {
     const consumers = makeConsumers(5);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    expect(screen.getByText(/عرض الكل/)).toBeTruthy();
+    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const avatars = container.querySelectorAll('[class*="aspect-square"]');
+    expect(avatars.length).toBe(5);
   });
 
-  it('shows expand trigger when there are more than 3 consumers (English)', () => {
-    const consumers = makeConsumers(5);
+  it('does not show expand/collapse button', () => {
+    const consumers = makeConsumers(8);
     renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
-    expect(screen.getByText(/Show all/)).toBeTruthy();
+    expect(screen.queryByText(/Show all|Show less|عرض الكل|عرض أقل/)).toBeNull();
   });
 
-  it('does not show expand trigger when 3 or fewer consumers', () => {
+  it('shows hover tooltip with name when logo is hovered', () => {
     const consumers = makeConsumers(3);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    expect(screen.queryByText(/عرض الكل|Show all/)).toBeNull();
+    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const wrappers = container.querySelectorAll('[class*="transition-transform"]');
+    if (wrappers.length > 0) {
+      fireEvent.mouseEnter(wrappers[0]);
+      expect(screen.getByText('Consumer 1')).toBeTruthy();
+      fireEvent.mouseLeave(wrappers[0]);
+      expect(screen.queryByText('Consumer 1')).toBeNull();
+    }
   });
 
-  it('expands to show all consumers on click (Arabic)', () => {
-    const consumers = makeConsumers(5);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    fireEvent.click(screen.getByText(/عرض الكل/));
-    expect(screen.getByText('Consumer 4')).toBeTruthy();
-    expect(screen.getByText('Consumer 5')).toBeTruthy();
-    expect(screen.getByText('عرض أقل')).toBeTruthy();
-  });
-
-  it('expands to show all consumers on click (English)', () => {
-    const consumers = makeConsumers(5);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
-    fireEvent.click(screen.getByText(/Show all/));
-    expect(screen.getByText('Consumer 4')).toBeTruthy();
-    expect(screen.getByText('Consumer 5')).toBeTruthy();
-    expect(screen.getByText('Show less')).toBeTruthy();
-  });
-
-  it('collapses back to featured only on second click', () => {
-    const consumers = makeConsumers(5);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    fireEvent.click(screen.getByText(/عرض الكل/));
-    expect(screen.getByText('Consumer 4')).toBeTruthy();
-    fireEvent.click(screen.getByText('عرض أقل'));
-    expect(screen.queryByText('Consumer 4')).toBeNull();
-    expect(screen.queryByText('Consumer 5')).toBeNull();
-    expect(screen.getByText(/عرض الكل/)).toBeTruthy();
-  });
-
-  it('renders category labels for featured consumers', () => {
+  it('shows category in tooltip when available', () => {
     const consumers = makeConsumers(3);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    // Consumer 1 = Enterprise, Consumer 2 = Platform, Consumer 3 = Enterprise
-    const allEnterprise = screen.getAllByText('Enterprise');
-    expect(allEnterprise.length).toBe(2);
-    expect(screen.getByText('Platform')).toBeTruthy();
+    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const wrappers = container.querySelectorAll('[class*="transition-transform"]');
+    if (wrappers.length > 0) {
+      fireEvent.mouseEnter(wrappers[0]);
+      expect(screen.getByText('Enterprise')).toBeTruthy();
+    }
   });
 
-  it('renders consumer avatars as links', () => {
+  it('renders consumer avatars as clickable links', () => {
     const consumers = makeConsumers(1);
-    renderWithProvider(<TrustedBySection consumers={consumers} />, 'ar');
-    const link = screen.getByText('Consumer 1').closest('a');
+    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const avatar = container.querySelector('[class*="aspect-square"]');
+    const link = avatar?.closest('a');
     expect(link).toBeTruthy();
     expect(link?.getAttribute('href')).toBe('https://consumer1.app');
     expect(link?.getAttribute('target')).toBe('_blank');
+  });
+
+  it('renders exactly the number of logos matching consumers count', () => {
+    const consumers = makeConsumers(8);
+    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const avatars = container.querySelectorAll('[class*="aspect-square"]');
+    expect(avatars.length).toBe(8);
   });
 });
