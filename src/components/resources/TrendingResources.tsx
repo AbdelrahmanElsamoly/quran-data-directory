@@ -1,10 +1,12 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from '@/i18n';
 import { useTrendingResources } from '@/hooks/useTrendingResources';
 import { ResourceCard } from './ResourceCard';
-import type { Resource, ResourceType } from '@/types/resource';
+import type { TrendingResource, TrendingPeriod } from '@/types/announcement';
+import type { Resource } from '@/types/resource';
 
 export default function TrendingResources() {
   const t = useTranslations();
@@ -19,6 +21,14 @@ export default function TrendingResources() {
     '30d': t.trending.period30d,
     'all-time': t.trending.periodAllTime,
   };
+
+  const resourceCards = useMemo(() => {
+    return resources.map((resource: TrendingResource, index: number) => ({
+      resource,
+      rank: index + 1,
+      downloadCount: resource.downloads,
+    }));
+  }, [resources]);
 
   return (
     <section className="section-padding py-8" aria-label={t.trending.title}>
@@ -68,30 +78,12 @@ export default function TrendingResources() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {resources.map((resource, index) => (
+            {resourceCards.map(({ resource, rank, downloadCount }) => (
               <ResourceCard
                 key={resource.id}
-                resource={{
-                  id: resource.id,
-                  name: resource.name,
-                  slug: resource.slug,
-                  type: resource.type as ResourceType,
-                  description: resource.description,
-                  short_description: resource.short_description,
-                  documentation_url: null,
-                  github_url: null,
-                  license: resource.license,
-                  itqan_badge: false,
-                  status: 'published' as const,
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString(),
-                  version: resource.version,
-                  github_stats: null,
-                  total_downloads: resource.downloads,
-                  downloads: resource.downloads,
-                } as Resource}
-                rank={index + 1}
-                downloadCount={resource.downloads}
+                resource={resource as Resource}
+                rank={rank}
+                downloadCount={downloadCount}
               />
             ))}
           </div>

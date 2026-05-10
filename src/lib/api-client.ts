@@ -38,50 +38,41 @@ async function fetchResources(
   params: ResourceListParams = {}
 ): Promise<PaginatedResponse<Resource>> {
   if (DATA_MODE === 'mock') {
-    // Apply filters
-    let filtered = [...mockResources];
-
-    if (params.type) {
-      filtered = filtered.filter((r) => r.type === params.type);
-    }
-    if (params.license) {
-      filtered = filtered.filter((r) => r.license === params.license);
-    }
-    if (params.itqan_badge === 'true') {
-      filtered = filtered.filter((r) => r.itqan_badge);
-    }
-    if (params.itqan_badge === 'false') {
-      filtered = filtered.filter((r) => !r.itqan_badge);
-    }
-    if (params.search) {
-      const q = params.search.toLowerCase();
-      filtered = filtered.filter(
-        (r) =>
-          r.name.toLowerCase().includes(q) ||
-          r.description.toLowerCase().includes(q)
-      );
-    }
+    // Apply filters - chain to avoid intermediate array copies
+    let filtered = mockResources.filter((r) => {
+      if (params.type && r.type !== params.type) return false;
+      if (params.license && r.license !== params.license) return false;
+      if (params.itqan_badge === 'true' && !r.itqan_badge) return false;
+      if (params.itqan_badge === 'false' && r.itqan_badge) return false;
+      if (params.search) {
+        const q = params.search.toLowerCase();
+        if (!r.name.toLowerCase().includes(q) && !r.description.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
 
     // Apply sorting
     if (params.sort) {
+      const sorted = [...filtered];
       switch (params.sort) {
         case 'downloads':
-          filtered.sort((a, b) => b.total_downloads - a.total_downloads);
+          sorted.sort((a, b) => b.total_downloads - a.total_downloads);
           break;
         case 'newest':
-          filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
           break;
         case 'oldest':
-          filtered.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+          sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
           break;
         case 'name_asc':
-          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
           break;
         case 'name_desc':
-          filtered.sort((a, b) => b.name.localeCompare(a.name));
+          sorted.sort((a, b) => b.name.localeCompare(a.name));
           break;
         // 'relevance' is default - no sorting needed
       }
+      filtered = sorted;
     }
 
     const page = params.page || 1;

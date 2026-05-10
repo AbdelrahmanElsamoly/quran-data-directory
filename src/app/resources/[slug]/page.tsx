@@ -2,6 +2,9 @@ import { notFound } from 'next/navigation';
 import { mockResources } from '@/lib/mock-data';
 import { ResourceDetailClient } from './ResourceDetailClient';
 
+// O(1) lookup map — built once at module load time
+const resourceBySlug = new Map(mockResources.map((r) => [r.slug, r]));
+
 export function generateStaticParams() {
   return mockResources.map((resource) => ({
     slug: resource.slug,
@@ -14,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const resource = mockResources.find((r) => r.slug === slug);
+  const resource = resourceBySlug.get(slug);
   if (!resource) return { title: 'Resource Not Found' };
 
   return {
@@ -31,7 +34,7 @@ export default async function ResourceDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const resource = mockResources.find((r) => r.slug === slug);
+  const resource = resourceBySlug.get(slug);
 
   if (!resource) {
     notFound();

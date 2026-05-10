@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ConsumerCard } from '@/components/resources/ConsumerCard';
 import type { Consumer } from '@/types/resource';
@@ -29,12 +29,14 @@ describe('ConsumerCard', () => {
     expect(img).toHaveAttribute('src', '/logo.png');
   });
 
-  it('falls back to initials when logo image fails to load', () => {
+  it('falls back to initials when logo image fails to load', async () => {
     const consumerWithLogo: Consumer = { ...baseConsumer, logo_url: '/broken-logo.png' };
     render(<ConsumerCard consumer={consumerWithLogo} index={0} />);
     const img = screen.getByAltText('Quran.com logo');
     // Simulate image load error
-    img.dispatchEvent(new Event('error'));
+    await act(async () => {
+      img.dispatchEvent(new Event('error', { bubbles: true }));
+    });
     expect(screen.getByText('Q')).toBeTruthy();
   });
 

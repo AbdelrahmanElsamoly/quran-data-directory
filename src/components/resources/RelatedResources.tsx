@@ -1,21 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { useResources, useResource } from '@/hooks/useResources';
+import { useResources } from '@/hooks/useResources';
 import type { Resource } from '@/types/resource';
 import { ResourceBadge } from '@/components/ui/Badge';
 import { useTranslations } from '@/i18n';
 
 interface RelatedResourcesProps {
   currentResourceId: number;
+  currentResourceType?: string;
 }
 
-export function RelatedResources({ currentResourceId }: RelatedResourcesProps) {
+export function RelatedResources({ currentResourceId, currentResourceType }: RelatedResourcesProps) {
   const t = useTranslations();
-  // First, get the current resource to find its type
-  // We need to fetch by ID, but useResources filters by type...
-  // So we fetch up to 8 resources and filter client-side
-  const { data: paginated, isLoading } = useResources({ page_size: 8 });
+  // Fetch only resources of the same type — server-side filter, fewer results
+  const { data: paginated, isLoading } = useResources({
+    type: currentResourceType,
+    page_size: 6,
+  });
 
   if (isLoading) {
     return (
@@ -31,14 +33,8 @@ export function RelatedResources({ currentResourceId }: RelatedResourcesProps) {
   }
 
   const allResources = paginated?.results ?? [];
-  const currentResource = allResources.find((r) => r.id === currentResourceId);
-
-  if (!currentResource) {
-    return null;
-  }
-
   const related = allResources
-    .filter((r) => r.type === currentResource.type && r.id !== currentResourceId)
+    .filter((r) => r.id !== currentResourceId)
     .slice(0, 4);
 
   if (related.length === 0) {

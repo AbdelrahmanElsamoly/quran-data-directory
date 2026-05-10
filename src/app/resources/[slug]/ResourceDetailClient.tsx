@@ -154,7 +154,7 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
           <CommentSection resourceId={resource.id} />
 
           {/* Related Resources */}
-          <RelatedResources currentResourceId={resource.id} />
+          <RelatedResources currentResourceId={resource.id} currentResourceType={resource.type} />
         </div>
 
         {/* Sidebar (right column in RTL) */}

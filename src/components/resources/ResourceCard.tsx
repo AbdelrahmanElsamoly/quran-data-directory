@@ -89,7 +89,7 @@ export function ResourceCard({ resource, rank, downloadCount }: ResourceCardProp
               aria-label={t.resource.github}
               onClick={(e) => {
                 e.stopPropagation();
-                window.open(resource.github_url, '_blank', 'noopener,noreferrer');
+                window.open(resource.github_url ?? undefined, '_blank', 'noopener,noreferrer');
               }}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

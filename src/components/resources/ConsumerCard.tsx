@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import type { Consumer } from '@/types/resource';
 
 interface ConsumerCardProps {
@@ -32,41 +33,37 @@ function getInitials(name: string): string {
 }
 
 export function ConsumerCard({ consumer, index }: ConsumerCardProps) {
+  const [logoError, setLogoError] = useState(false);
   const gradient = gradientColors[index % gradientColors.length];
 
   const isClickable = consumer.website_url && consumer.website_url.startsWith('http');
 
-  const cardContent = (
-    <div className="flex flex-col items-center gap-3 text-center">
-      <div
-        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-lg font-bold text-white`}
-      >
-        {consumer.logo_url ? (
-          <img
-            src={consumer.logo_url}
-            alt={`${consumer.name} logo`}
-            className="h-full w-full rounded-xl object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              // Replace image with initials by setting parent content
-              const parent = target.parentElement;
-              if (parent) {
-                parent.textContent = getInitials(consumer.name);
-              }
-            }}
-          />
-        ) : (
-          getInitials(consumer.name)
-        )}
+  const cardContent = useMemo(
+    () => (
+      <div className="flex flex-col items-center gap-3 text-center">
+        <div
+          className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-lg font-bold text-white`}
+        >
+          {consumer.logo_url && !logoError ? (
+            <img
+              src={consumer.logo_url}
+              alt={`${consumer.name} logo`}
+              className="h-full w-full rounded-xl object-cover"
+              onError={() => setLogoError(true)}
+            />
+          ) : (
+            getInitials(consumer.name)
+          )}
+        </div>
+        <div>
+          <p className="font-medium text-sm text-[var(--text-primary)]">{consumer.name}</p>
+          {consumer.category && (
+            <p className="text-xs text-[var(--text-muted)]">{consumer.category}</p>
+          )}
+        </div>
       </div>
-      <div>
-        <p className="font-medium text-sm text-[var(--text-primary)]">{consumer.name}</p>
-        {consumer.category && (
-          <p className="text-xs text-[var(--text-muted)]">{consumer.category}</p>
-        )}
-      </div>
-    </div>
+    ),
+    [consumer.logo_url, consumer.name, consumer.category, gradient, logoError],
   );
 
   if (isClickable) {
