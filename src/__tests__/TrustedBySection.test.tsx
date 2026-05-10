@@ -21,21 +21,6 @@ function renderWithProvider(ui: React.ReactElement, locale: 'ar' | 'en' = 'ar') 
     },
     writable: true,
   });
-  return render(<LanguageProvider>{ui}</LanguageProvider>, {
-    wrapper: ({ children }) => <LanguageProvider>{children}</LanguageProvider>,
-  });
-}
-
-function renderWithContainer(ui: React.ReactElement, locale: 'ar' | 'en' = 'ar') {
-  Object.defineProperty(window, 'localStorage', {
-    value: {
-      getItem: (key: string) => key === 'ratq_locale' ? locale : null,
-      setItem: () => {},
-      removeItem: () => {},
-      clear: () => {},
-    },
-    writable: true,
-  });
   return render(ui, {
     wrapper: ({ children }) => (
       <LanguageProvider>{children}</LanguageProvider>
@@ -65,7 +50,7 @@ describe('TrustedBySection — Sidebar', () => {
 
   it('renders all consumers at once (no expand/collapse)', () => {
     const consumers = makeConsumers(5);
-    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const { container } = renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
     const avatars = container.querySelectorAll('[class*="aspect-square"]');
     expect(avatars.length).toBe(5);
   });
@@ -78,29 +63,27 @@ describe('TrustedBySection — Sidebar', () => {
 
   it('shows hover tooltip with name when logo is hovered', () => {
     const consumers = makeConsumers(3);
-    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const { container } = renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
     const wrappers = container.querySelectorAll('[class*="transition-transform"]');
-    if (wrappers.length > 0) {
-      fireEvent.mouseEnter(wrappers[0]);
-      expect(screen.getByText('Consumer 1')).toBeTruthy();
-      fireEvent.mouseLeave(wrappers[0]);
-      expect(screen.queryByText('Consumer 1')).toBeNull();
-    }
+    expect(wrappers.length).toBeGreaterThan(0);
+    fireEvent.mouseEnter(wrappers[0]);
+    expect(screen.getByText('Consumer 1')).toBeTruthy();
+    fireEvent.mouseLeave(wrappers[0]);
+    expect(screen.queryByText('Consumer 1')).toBeNull();
   });
 
   it('shows category in tooltip when available', () => {
     const consumers = makeConsumers(3);
-    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const { container } = renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
     const wrappers = container.querySelectorAll('[class*="transition-transform"]');
-    if (wrappers.length > 0) {
-      fireEvent.mouseEnter(wrappers[0]);
-      expect(screen.getByText('Enterprise')).toBeTruthy();
-    }
+    expect(wrappers.length).toBeGreaterThan(0);
+    fireEvent.mouseEnter(wrappers[0]);
+    expect(screen.getByText('Enterprise')).toBeTruthy();
   });
 
   it('renders consumer avatars as clickable links', () => {
     const consumers = makeConsumers(1);
-    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const { container } = renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
     const avatar = container.querySelector('[class*="aspect-square"]');
     const link = avatar?.closest('a');
     expect(link).toBeTruthy();
@@ -110,7 +93,7 @@ describe('TrustedBySection — Sidebar', () => {
 
   it('renders exactly the number of logos matching consumers count', () => {
     const consumers = makeConsumers(8);
-    const { container } = renderWithContainer(<TrustedBySection consumers={consumers} />, 'en');
+    const { container } = renderWithProvider(<TrustedBySection consumers={consumers} />, 'en');
     const avatars = container.querySelectorAll('[class*="aspect-square"]');
     expect(avatars.length).toBe(8);
   });
