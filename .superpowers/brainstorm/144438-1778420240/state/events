@@ -1,0 +1,6 @@
+{"type":"click","text":"A\n    \n      6 Cards + \"+N more\"\n      Compact 3×2 grid, expand on click","choice":"a","id":null,"timestamp":1778421305382}
+{"type":"click","text":"B\n    \n      9 Cards + \"+N more\"\n      Full 3×3 grid, expand on click","choice":"b","id":null,"timestamp":1778421305866}
+{"type":"click","text":"C\n    \n      All Visible + \"Show Less\"\n      No hidden content, toggle to collapse","choice":"c","id":null,"timestamp":1778421306356}
+{"type":"click","text":"B\n    \n      9 Cards + \"+N more\"\n      Full 3×3 grid, expand on click","choice":"b","id":null,"timestamp":1778421307146}
+{"type":"click","text":"A\n    \n      6 Cards + \"+N more\"\n      Compact 3×2 grid, expand on click","choice":"a","id":null,"timestamp":1778421307535}
+{"type":"click","text":"C\n    \n      All Visible + \"Show Less\"\n      No hidden content, toggle to collapse","choice":"c","id":null,"timestamp":1778421308005}
