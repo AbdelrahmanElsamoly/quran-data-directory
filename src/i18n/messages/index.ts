@@ -141,6 +141,10 @@ export interface Messages {
       yes: string;
       no: string;
       relatedResources: string;
+      trustedBy: string;
+      trustedByCount: string;
+      showMore: string;
+      showLess: string;
       comments: string;
       leaveAComment: string;
       authorName: string;

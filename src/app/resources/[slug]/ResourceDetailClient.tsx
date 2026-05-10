@@ -10,6 +10,7 @@ import { ReportButton } from '@/components/resources/ReportButton';
 import { ResourcePreview } from '@/components/resources/ResourcePreview';
 import { usePreview } from '@/hooks/usePreview';
 import { GithubStatsCard } from '@/components/resources/GithubStatsCard';
+import { TrustedBySection } from '@/components/resources/TrustedBySection';
 import { useLanguage } from '@/i18n';
 import type { Resource } from '@/types/resource';
 
@@ -142,6 +143,11 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
               githubUrl={resource.github_url}
               stats={resource.github_stats}
             />
+          )}
+
+          {/* Trusted By */}
+          {resource.consumers && resource.consumers.length > 0 && (
+            <TrustedBySection consumers={resource.consumers} />
           )}
 
           {/* Comments */}
