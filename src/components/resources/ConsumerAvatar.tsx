@@ -6,6 +6,8 @@ import type { Consumer } from '@/types/resource';
 interface ConsumerAvatarProps {
   consumer: Consumer;
   size: 'featured' | 'expanded' | 'sidebar';
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const sizeMap = {
@@ -47,7 +49,7 @@ const gradientColors = [
   'from-purple-500 to-purple-700',
 ];
 
-export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
+export function ConsumerAvatar({ consumer, size, onMouseEnter, onMouseLeave }: ConsumerAvatarProps) {
   const [logoError, setLogoError] = useState(false);
   const sizes = sizeMap[size];
   const gradient = gradientColors[consumer.name.charCodeAt(0) % gradientColors.length];
@@ -77,6 +79,8 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
         target="_blank"
         rel="noopener noreferrer"
         className={wrapperClasses}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         <div
           className={`flex aspect-square items-center justify-center rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
@@ -96,7 +100,11 @@ export function ConsumerAvatar({ consumer, size }: ConsumerAvatarProps) {
   }
 
   return (
-    <div className={wrapperClasses}>
+    <div
+      className={wrapperClasses}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div
         className={`flex aspect-square items-center justify-center rounded-full bg-gradient-to-br ${gradient} shadow-sm ${sizes.avatar}`}
       >
