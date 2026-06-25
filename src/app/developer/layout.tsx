@@ -34,7 +34,7 @@ export default function DeveloperLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full overflow-x-hidden">
       <DeveloperSidebar
         mobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}

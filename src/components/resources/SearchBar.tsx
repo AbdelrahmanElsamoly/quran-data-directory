@@ -1,42 +1,41 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, type FormEvent } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/i18n';
 
 export function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
   const [query, setQuery] = useState(initialQuery);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { locale } = useLanguage();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (query.trim()) {
-      params.set('search', query.trim());
-    }
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams.toString());
+    if (query.trim()) params.set('search', query.trim());
+    else params.delete('search');
+    params.delete('page');
     router.push(`/resources?${params.toString()}`);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="relative">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={locale === 'ar' ? 'ابحث في الموارد...' : 'Search resources...'}
-          className="input-field ps-12 pe-4"
-        />
+    <form onSubmit={handleSubmit} className="w-full" dir="ltr">
+      <div className="flex h-14 items-center rounded-full bg-white p-2 shadow-[0_8px_24px_rgba(15,23,42,0.03)] sm:h-16">
         <button
           type="submit"
-          className="absolute inset-y-0 start-0 flex items-center px-4 text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors"
-          aria-label="Search"
+          className="h-full shrink-0 rounded-full bg-black px-6 text-sm font-black text-white transition hover:bg-[#171717] sm:px-8"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          {locale === 'ar' ? 'ابحث' : 'Search'}
         </button>
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder={locale === 'ar' ? 'البحث في الموارد' : 'Search resources'}
+          className="h-full min-w-0 flex-1 border-0 bg-transparent px-5 text-right text-sm text-black outline-none placeholder:text-[#777] focus:ring-0"
+          dir={locale === 'ar' ? 'rtl' : 'ltr'}
+        />
       </div>
     </form>
   );

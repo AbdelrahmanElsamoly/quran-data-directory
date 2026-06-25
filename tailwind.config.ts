@@ -5,8 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        plexArabic: ['var(--font-plex-sans-arabic)', 'sans-serif'],
-        heading: ['var(--font-playfair-display)', 'serif'],
+        ratq: ['Ratq', 'var(--font-plex-sans-arabic)', 'sans-serif'],
+        plexArabic: ['Ratq', 'var(--font-plex-sans-arabic)', 'sans-serif'],
+        heading: ['Ratq', 'var(--font-plex-sans-arabic)', 'sans-serif'],
       },
       keyframes: {
         'fade-in': {

@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/i18n';
 import { useAuth } from '@/hooks/useAuth';
@@ -13,34 +13,25 @@ interface ReportButtonProps {
 }
 
 export function ReportButton({ resourceSlug, resourceName, onReportSubmitted }: ReportButtonProps) {
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
   const { user } = useAuth();
-  const [mounted, setMounted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted || !user) {
+  if (!user) {
     return (
-      <Link href={`/login?redirect=/resources/${resourceSlug}`} className="btn-outline block text-center text-sm py-2.5 px-4">
-        {t.resource.detail.loginToReport}
+      <Link href={`/login?redirect=/resources/${resourceSlug}`} className="flex h-9 w-full items-center justify-center gap-2 rounded-full bg-[#f7f7f7] text-xs font-black text-black transition hover:bg-[#ededed]">
+        <FlagIcon />
+        {locale === 'ar' ? 'إبلاغ عن هذا المورد' : 'Report this resource'}
       </Link>
     );
   }
 
   return (
     <>
-      <button
-        onClick={() => setModalOpen(true)}
-        className="block text-center text-sm py-2.5 px-4 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--danger)] text-white hover:bg-[rgba(220,38,38,0.9)] transition-colors duration-200"
-        title={t.resource.detail.reportTooltip}
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-8a2 2 0 012-2h14a2 2 0 012 2v8l-4-3H7L3 21z" />
-        </svg>
-        {t.resource.detail.report}
+      <button onClick={() => setModalOpen(true)} className="flex h-9 w-full items-center justify-center gap-2 rounded-full bg-[#f7f7f7] text-xs font-black text-black transition hover:bg-[#ededed]">
+        <FlagIcon />
+        {locale === 'ar' ? 'إبلاغ عن هذا المورد' : 'Report this resource'}
       </button>
-
       {modalOpen && (
         <ReportModal
           isOpen={modalOpen}
@@ -52,4 +43,8 @@ export function ReportButton({ resourceSlug, resourceName, onReportSubmitted }: 
       )}
     </>
   );
+}
+
+function FlagIcon() {
+  return <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path d="M5 21V5m0 0c5-3 9 3 14 0v10c-5 3-9-3-14 0"/></svg>;
 }

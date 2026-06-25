@@ -12,79 +12,46 @@ interface CommentSectionProps {
 export function CommentSection({ resourceId }: CommentSectionProps) {
   const { data: comments, isLoading } = useComments(resourceId);
   const [newComment, setNewComment] = useState('');
-  const [authorName, setAuthorName] = useState('');
-  const { t, locale } = useLanguage();
+  const { locale, t } = useLanguage();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Stub: comments.create() not yet available in api-client.ts
-    // For now, just clear the form and show a message
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     setNewComment('');
-    setAuthorName('');
   };
 
   return (
-    <section className="mt-10 border-t border-[var(--border-color)] pt-8">
-      <h2 className="font-heading text-xl font-semibold mb-6">{t.resource.detail.comments}</h2>
-
-      {/* Add comment form */}
-      <form onSubmit={handleSubmit} className="mb-8">
-        <div className="mb-3">
-          <input
-            type="text"
-            placeholder={t.resource.detail.authorName}
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-            className="input-field w-full mb-3"
-            required
-          />
-          <textarea
-            placeholder={t.resource.detail.leaveAComment}
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="input-field w-full min-h-[100px] resize-y"
-            required
-          />
-        </div>
-        <button type="submit" className="btn-primary text-sm py-2 px-5">
+    <section className="mt-9">
+      <h2 className="text-xl font-black">{t.resource.detail.comments}</h2>
+      <form onSubmit={handleSubmit} className="mt-5">
+        <textarea
+          value={newComment}
+          onChange={(event) => setNewComment(event.target.value)}
+          placeholder={t.resource.detail.leaveAComment}
+          className="min-h-[86px] w-full resize-none rounded-xl border-0 bg-[#f8f8f8] p-4 text-sm outline-none focus:ring-1 focus:ring-black/10"
+          required
+        />
+        <button type="submit" className="mt-3 rounded-full bg-black px-8 py-2 text-xs font-black text-white transition hover:bg-[#171717]">
           {t.resource.detail.post}
         </button>
-        <p className="text-xs text-[var(--text-muted)] mt-2">
-          {t.resource.detail.commingSoon}
-        </p>
       </form>
 
-      {/* Comment list */}
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="skeleton h-20 rounded-lg" />
-          ))}
-        </div>
-      ) : !comments || comments.length === 0 ? (
-        <p className="text-[var(--text-muted)] text-center py-6">{t.resource.detail.noComments}</p>
-      ) : (
-        <div className="space-y-4">
-          {comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="bg-[var(--bg-secondary)] rounded-lg p-4 border border-[var(--border-color)]"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-sm text-[var(--text-primary)]">
-                  {comment.author_name}
-                </span>
-                <span className="text-xs text-[var(--text-muted)]">
-                  {formatDate(comment.created_at, locale)}
-                </span>
+      <div className="mt-6 space-y-5">
+        {isLoading ? (
+          [1, 2].map((item) => <div key={item} className="h-32 animate-pulse rounded-xl bg-[#f7f7f7]" />)
+        ) : comments?.length ? (
+          comments.map((comment) => (
+            <article key={comment.id} className="rounded-xl border border-[#e7e7e7] bg-white p-6">
+              <div>
+                <h3 className="text-base font-black">{comment.author_name}</h3>
+                <time className="mt-1 block text-xs text-[#8c8c8c]">{formatDate(comment.created_at, locale)}</time>
               </div>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                {comment.content}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+              <p className="mt-5 text-sm leading-8 text-[#777]">{comment.content}</p>
+            </article>
+          ))
+        ) : (
+          <p className="rounded-xl bg-[#fafafa] p-8 text-center text-sm text-[#888]">{t.resource.detail.noComments}</p>
+        )}
+      </div>
     </section>
   );
 }

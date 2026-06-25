@@ -1,97 +1,57 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { useLanguage } from '@/i18n';
 
 const navItems = [
-  { href: '/dashboard', label: 'لوحة التحكم', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { href: '/dashboard/resources', label: 'مواردي', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-  { href: '/dashboard/requests', label: 'طلبات الوصول', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-  { href: '/dashboard/api-keys', label: 'مفاتيح API', icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z' },
-  { href: '/dashboard/settings', label: 'الإعدادات', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
-];
+  { href: '/dashboard', labelKey: 'overview', detailKey: 'overview', icon: 'M3 12l9-9 9 9M5.25 10.5v9h4.5v-5.25h4.5V19.5h4.5v-9' },
+  { href: '/dashboard/resources', labelKey: 'resources', detailKey: 'resourcesDetail', icon: 'M20.25 7.5 12 12.25 3.75 7.5M12 21.75V12.25m8.25-4.75v9.75L12 21.75l-8.25-4.5V7.5L12 3l8.25 4.5Z' },
+  { href: '/dashboard/requests', labelKey: 'requests', detailKey: 'requestsDetail', icon: 'M12 6v6l4 2m5-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' },
+  { href: '/dashboard/api-keys', labelKey: 'apiKeys', detailKey: 'apiKeysDetail', icon: 'M15.75 7.5a3.75 3.75 0 1 1-1.08 2.64L6.75 18H4.5v2.25H2.25V18l9-9a3.74 3.74 0 0 1 4.5-1.5Z' },
+  { href: '/dashboard/settings', labelKey: 'settings', detailKey: 'settingsDetail', icon: 'M10.5 6h3m-6.25 6h9.5M10.5 18h3M4.5 3.75h15A1.5 1.5 0 0 1 21 5.25v13.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.75V5.25a1.5 1.5 0 0 1 1.5-1.5Z' },
+] as const;
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false);
+  const { t, direction } = useLanguage();
+  const side = t.dashboard.side;
+  const isRtl = direction === 'rtl';
 
   return (
     <>
-      {/* Mobile overlay */}
-      {collapsed && (
-        <div
-          className="fixed inset-0 bg-black/30 z-30 lg:hidden"
-          onClick={() => setCollapsed(false)}
-        />
-      )}
-
-      <aside
-        className={`fixed top-0 right-0 h-full bg-[var(--bg-card)] border-l border-[var(--border-color)] z-40 transition-all duration-300 overflow-y-auto
-          ${collapsed ? 'w-64' : 'w-0 lg:w-64'}
-        `}
-      >
-        <div className="p-5">
-          {/* Toggle button (mobile) */}
-          <button
-            type="button"
-            onClick={() => setCollapsed(false)}
-            className="absolute top-3 left-3 lg:hidden text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          {/* Header */}
-          <div className="mb-6 pt-2">
-            <h2 className="font-heading text-lg font-bold text-[var(--accent-primary)]">لوحة التحكم</h2>
+      <button type="button" onClick={() => setOpen(true)} className={`fixed top-32 z-30 flex h-11 w-11 items-center justify-center rounded-full border border-[#ededed] bg-white text-black shadow-[0_10px_28px_rgba(15,23,42,0.08)] lg:hidden ${isRtl ? 'right-4' : 'left-4'}`} aria-label={side.openMenu}>
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+      </button>
+      {open && <button type="button" aria-label={side.closeMenu} className="fixed inset-0 z-40 bg-black/30 lg:hidden" onClick={() => setOpen(false)} />}
+      <aside className={`fixed top-0 z-50 flex h-full w-72 flex-col border-[#ededed] bg-white shadow-[0_16px_44px_rgba(15,23,42,0.08)] transition-transform duration-300 lg:top-32 lg:h-[calc(100vh-8rem)] lg:translate-x-0 lg:shadow-none ${isRtl ? 'right-0 border-l' : 'left-0 border-r'} ${open ? 'translate-x-0' : isRtl ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0'}`} dir={direction}>
+        <div className="flex h-full flex-col p-5">
+          <div className="mb-7 flex items-center justify-between gap-3">
+            <Link href="/dashboard" className="flex min-w-0 items-center gap-3" onClick={() => setOpen(false)}>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#fafafa]"><Image src="/images/logo.png" alt="RATQ" width={32} height={32} className="h-8 w-8 object-contain" /></span>
+              <span className="min-w-0"><span className="block text-xs font-black text-[#8b949e]">RATQ</span><span className="block truncate text-lg font-black text-black">{side.title}</span></span>
+            </Link>
+            <button type="button" onClick={() => setOpen(false)} className="flex h-9 w-9 items-center justify-center rounded-full bg-[#fafafa] text-[#6f7780] lg:hidden" aria-label={side.closeMenu}><svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></button>
           </div>
-
-          {/* Navigation */}
-          <nav className="space-y-1">
+          <nav className="grid gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
-
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors
-                    ${isActive
-                      ? 'bg-[var(--accent-primary)] text-white font-semibold'
-                      : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'
-                    }
-                  `}
-                >
-                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.icon} />
-                  </svg>
-                  <span>{item.label}</span>
+                <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className={`flex items-center gap-3 rounded-lg px-3 py-3 transition ${isActive ? 'bg-[#171717] text-white' : 'text-[#59636d] hover:bg-[#fafafa] hover:text-black'}`}>
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${isActive ? 'bg-white/10 text-[#e8ef3d]' : 'bg-[#fafafa] text-[#171717]'}`}><svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d={item.icon} /></svg></span>
+                  <span className="min-w-0"><span className="block truncate text-sm font-black">{side[item.labelKey]}</span><span className={`mt-0.5 block truncate text-xs font-bold ${isActive ? 'text-white/60' : 'text-[#9aa4ad]'}`}>{side[item.detailKey]}</span></span>
                 </Link>
               );
             })}
           </nav>
+          <div className="mt-auto rounded-lg bg-[#fafafa] p-4"><p className="text-xs font-black text-[#8b949e]">{side.shortcut}</p><Link href="/resources" onClick={() => setOpen(false)} className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-full bg-black px-4 text-sm font-black text-white transition hover:bg-[#171717]">{side.browseCatalog}</Link></div>
         </div>
       </aside>
     </>
   );
 }
 
-// Mobile sidebar toggle button
-export function SidebarToggle() {
-  const [collapsed, setCollapsed] = useState(true);
-
-  return (
-    <button
-      type="button"
-      onClick={() => setCollapsed(false)}
-      className="lg:hidden text-[var(--text-muted)] hover:text-[var(--text-primary)] p-2"
-      aria-label="فتح القائمة"
-    >
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-  );
-}
+export function SidebarToggle() { return null; }

@@ -1,110 +1,116 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/i18n';
-import { useState, useRef, useEffect } from 'react';
 import type { SortOption } from '@/types/resource';
-
-type SortKey = 'relevance' | 'downloads' | 'newest' | 'oldest' | 'name_asc' | 'name_desc';
-
-const sortOptions: { value: SortOption; key: SortKey }[] = [
-  { value: 'relevance', key: 'relevance' },
-  { value: 'downloads', key: 'downloads' },
-  { value: 'newest', key: 'newest' },
-  { value: 'oldest', key: 'oldest' },
-  { value: 'name_asc', key: 'name_asc' },
-  { value: 'name_desc', key: 'name_desc' },
-];
 
 export function SortControls() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, direction } = useLanguage();
-  const isRtl = direction === 'rtl';
+  const { direction, t } = useLanguage();
   const currentSort = (searchParams.get('sort') || 'relevance') as SortOption;
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const options: { value: SortOption; label: string }[] = [
+    { value: 'relevance', label: t.catalog.sort.options.relevance },
+    { value: 'downloads', label: t.catalog.sort.options.downloads },
+    { value: 'newest', label: t.catalog.sort.options.newest },
+    { value: 'oldest', label: t.catalog.sort.options.oldest },
+    { value: 'name_asc', label: t.catalog.sort.options.name_asc },
+    { value: 'name_desc', label: t.catalog.sort.options.name_desc },
+  ];
+  const selectedOption = options.find((option) => option.value === currentSort) ?? options[0];
 
-  const handleSortChange = (value: SortOption) => {
+  useEffect(() => {
+    const closeMenu = (event: MouseEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setIsOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+
+    document.addEventListener('mousedown', closeMenu);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', closeMenu);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, []);
+
+  const handleChange = (value: SortOption) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value === 'relevance') {
-      params.delete('sort');
-    } else {
-      params.set('sort', value);
-    }
+    if (value === 'relevance') params.delete('sort');
+    else params.set('sort', value);
     params.delete('page');
     router.push(`/resources?${params.toString()}`);
-    setOpen(false);
+    setIsOpen(false);
   };
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Close on Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const currentOption = sortOptions.find((o) => o.value === currentSort);
-  const selectedLabel = currentOption
-    ? t.catalog.sort.options[currentOption.key]
-    : t.catalog.sort.options.relevance;
-
   return (
-    <div className="flex items-center gap-2">
-      <label htmlFor="sort-trigger" className="text-sm text-[var(--text-muted)] font-heading whitespace-nowrap">
-        {t.catalog.sort.by}
-      </label>
-      <div className="relative inline-block" ref={containerRef}>
-        <button
-          id="sort-trigger"
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          className="flex items-center gap-2 bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--accent-primary)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent cursor-pointer transition-colors min-w-[200px] justify-between"
-        >
-          <span className="truncate">{selectedLabel}</span>
-          <span className="shrink-0 text-[var(--text-muted)]">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
+    <div ref={menuRef} className="relative w-fit" dir={direction}>
+      <button
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        className="group inline-flex min-w-[210px] items-center gap-3 rounded-xl border border-[#e7e7e7] bg-white px-4 py-3 text-start shadow-[0_4px_18px_rgba(0,0,0,0.04)] transition hover:border-[#cfcfcf] hover:shadow-[0_7px_22px_rgba(0,0,0,0.07)] focus:outline-none focus:ring-2 focus:ring-black/10"
+      >
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#f3f5f4] text-black">
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+            <path d="M8 7h12M4 7h.01M12 12h8M4 12h4M16 17h4M4 17h8" />
+          </svg>
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[10px] font-bold uppercase tracking-wide text-[#999]">
+            {t.catalog.sort.by}
           </span>
-        </button>
+          <span className="mt-0.5 block truncate text-sm font-black text-black">{selectedOption.label}</span>
+        </span>
+        <svg
+          className={`h-4 w-4 shrink-0 text-[#777] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
 
-        {open && (
-          <div
-            className={`absolute z-50 mt-1 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg shadow-lg overflow-hidden ${isRtl ? 'right-0' : 'left-0'}`}
-            style={{ minWidth: '200px' }}
-          >
-            {sortOptions.map((option) => (
+      {isOpen && (
+        <div
+          role="listbox"
+          aria-label={t.catalog.sort.by}
+          className="absolute start-0 z-30 mt-2 w-full min-w-[210px] overflow-hidden rounded-xl border border-[#e7e7e7] bg-white p-1.5 shadow-[0_16px_45px_rgba(0,0,0,0.13)]"
+        >
+          {options.map((option) => {
+            const isSelected = option.value === currentSort;
+            return (
               <button
                 key={option.value}
                 type="button"
-                onClick={() => handleSortChange(option.value)}
-                className={`w-full text-start px-3 py-2.5 text-sm transition-colors ${
-                  currentSort === option.value
-                    ? 'bg-[var(--accent-primary-light)] text-[var(--accent-primary)] font-medium'
-                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => handleChange(option.value)}
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-bold transition ${
+                  isSelected ? 'bg-black text-white' : 'text-[#555] hover:bg-[#f5f6f5] hover:text-black'
                 }`}
               >
-                {t.catalog.sort.options[option.key]}
+                <span>{option.label}</span>
+                {isSelected && (
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <path d="m5 12 4 4L19 6" />
+                  </svg>
+                )}
               </button>
-            ))}
-          </div>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
