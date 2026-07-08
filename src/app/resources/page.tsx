@@ -1,6 +1,5 @@
-import { Suspense } from 'react';
+﻿import { Suspense } from 'react';
 import { CatalogContent } from './CatalogContent';
-import { ListSkeleton } from '@/components/ui/Skeleton';
 
 export default function CatalogPage() {
   return (
@@ -12,15 +11,18 @@ export default function CatalogPage() {
 
 function CatalogLoading() {
   return (
-    <section className="section-padding">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <div className="skeleton h-10 w-48 mb-3" />
-          <div className="skeleton h-5 w-96 mb-4" />
-          <div className="skeleton h-12 max-w-lg" />
+    <div className="bg-white pb-20 pt-36">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <div className="h-[250px] animate-pulse rounded-[28px] bg-[#e7eef3]" />
+        <div className="mt-7 grid gap-7 lg:grid-cols-[270px_minmax(0,1fr)]">
+          <div className="h-[560px] animate-pulse rounded-[18px] bg-[#fafafa]" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 9 }).map((_, index) => (
+              <div key={index} className="h-[305px] animate-pulse rounded-[13px] bg-[#f5f5f5]" />
+            ))}
+          </div>
         </div>
-        <ListSkeleton count={9} />
       </div>
-    </section>
+    </div>
   );
 }

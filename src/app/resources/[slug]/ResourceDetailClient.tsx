@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { ResourceBadge } from '@/components/ui/Badge';
+import type { ReactNode } from 'react';
 import { formatDate } from '@/lib/utils';
 import { AccessRequestButton } from '@/components/resources/AccessRequestButton';
-import { RelatedResources } from '@/components/resources/RelatedResources';
 import { CommentSection } from '@/components/resources/CommentSection';
 import { ReportButton } from '@/components/resources/ReportButton';
 import { ResourcePreview } from '@/components/resources/ResourcePreview';
@@ -12,201 +11,142 @@ import { usePreview } from '@/hooks/usePreview';
 import { GithubStatsCard } from '@/components/resources/GithubStatsCard';
 import { TrustedBySection } from '@/components/resources/TrustedBySection';
 import { useLanguage } from '@/i18n';
-import type { Resource } from '@/types/resource';
+import type { Resource, ResourceType } from '@/types/resource';
+import arabicDescriptions from '@/i18n/resource-descriptions.ar.json';
 
 interface ResourceDetailClientProps {
   resource: Resource;
 }
 
-export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
-  const { t, locale } = useLanguage();
-  const { data: previewData, loading: previewLoading } = usePreview(resource.slug, resource.type);
+const typeColors: Record<ResourceType, string> = {
+  library: 'bg-[#e7ef3e]', sdk: 'bg-[#28b8f4]', dataset: 'bg-[#20df78]', api: 'bg-[#ff9c44]',
+  tafsir: 'bg-[#17e4ad]', audio: 'bg-[#f4a7cd]', pdf: 'bg-[#ff8a80]', json: 'bg-[#8de5a1]',
+};
 
+function TypeIcon({ type }: { type: ResourceType }) {
+  const paths: Record<ResourceType, ReactNode> = {
+    library: <><path d="M6 4h11a2 2 0 0 1 2 2v13H8a2 2 0 0 1-2-2V4Z"/><path d="M8 19a2 2 0 0 1 0-4h11M9 8h6"/></>,
+    sdk: <><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></>,
+    dataset: <><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 10h16M10 5v14"/></>,
+    api: <><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></>,
+    tafsir: <><path d="M12 3v18M5 7l14 10M19 7 5 17"/></>,
+    audio: <><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></>,
+    pdf: <><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4M9 13h6"/></>,
+    json: <><path d="M9 4c-2 0-3 1-3 3v2c0 2-1 3-3 3 2 0 3 1 3 3v2c0 2 1 3 3 3M15 4c2 0 3 1 3 3v2c0 2 1 3 3 3-2 0-3 1-3 3v2c0 2-1 3-3 3"/></>,
+  };
+  return <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">{paths[type]}</svg>;
+}
+
+function RepositoryPreview({ resource, description }: { resource: Resource; description: string }) {
+  const rows = ['Add deploy pipeline', 'Add recitations resource api', 'Add benchmark', 'Start sidekiq', 'Add books model'];
   return (
-    <div className="section-padding py-8">
-      {/* Breadcrumb */}
-      <nav className="mb-6 text-sm">
-        <ol className="flex items-center gap-2 text-[var(--text-muted)]">
-          <li><Link href="/" className="hover:text-[var(--accent-primary)]">{t.resource.detail.home}</Link></li>
-          <li>/</li>
-          <li><Link href="/resources" className="hover:text-[var(--accent-primary)]">{t.resource.detail.resources}</Link></li>
-          <li>/</li>
-          <li className="text-[var(--text-primary)]">{resource.name}</li>
-        </ol>
-      </nav>
-
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main content (left in RTL = first column) */}
-        <div className="lg:col-span-2">
-          {/* Resource header */}
-          <header className="mb-6">
-            <div className="flex items-center gap-3 mb-3">
-              <ResourceBadge type={resource.type} />
-              {resource.itqan_badge && (
-                <span className="badge bg-[var(--accent-gold-light)] text-[var(--accent-gold)] text-sm" title="Itqan Verified">
-                  ★ Itqan
-                </span>
-              )}
-            </div>
-            <h1 className="font-heading text-2xl font-bold text-[var(--text-primary)] mb-2">
-              {resource.name}
-            </h1>
-            <p className="text-sm text-[var(--text-muted)]">
-              {t.catalog.types[resource.type]}
-            </p>
-          </header>
-
-          {/* Preview Section */}
-          <ResourcePreview
-            resourceType={resource.type}
-            previewData={previewData}
-            loading={previewLoading}
-          />
-
-          {/* Description */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-6 mb-6">
-            <h2 className="font-heading text-lg font-semibold mb-3">{t.resource.detail.description}</h2>
-            <p className="text-[var(--text-secondary)] leading-relaxed whitespace-pre-line">
-              {resource.description}
-            </p>
-          </div>
-
-          {/* Metadata */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-6 mb-6">
-            <h2 className="font-heading text-lg font-semibold mb-4">{t.resource.detail.information}</h2>
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.license}</dt>
-                <dd className="text-sm font-medium text-[var(--text-primary)]">{resource.license}</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.version}</dt>
-                <dd className="text-sm font-medium text-[var(--text-primary)]">
-                  {resource.version || '—'}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.type}</dt>
-                <dd className="text-sm font-medium text-[var(--text-primary)]">
-                  {t.catalog.types[resource.type]}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.created}</dt>
-                <dd className="text-sm font-medium text-[var(--text-primary)]">
-                  {formatDate(resource.created_at, locale)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-[var(--text-muted)] mb-1">{t.resource.detail.updated}</dt>
-                <dd className="text-sm font-medium text-[var(--text-primary)]">
-                  {formatDate(resource.updated_at, locale)}
-                </dd>
-              </div>
-            </dl>
-
-            {/* External links */}
-            <div className="mt-4 pt-4 border-t border-[var(--border-color)] flex flex-wrap gap-3">
-              {resource.documentation_url && (
-                <a
-                  href={resource.documentation_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-outline text-xs py-2 px-4 inline-flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  {t.resource.detail.documentation}
-                </a>
-              )}
-              {resource.github_url && (
-                <a
-                  href={resource.github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-outline text-xs py-2 px-4 inline-flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                  </svg>
-                  GitHub
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* GitHub Stats */}
-          {resource.github_url && (
-            <GithubStatsCard
-              githubUrl={resource.github_url}
-              stats={resource.github_stats}
-            />
-          )}
-
-          {/* Comments */}
-          <CommentSection resourceId={resource.id} />
-
-          {/* Related Resources */}
-          <RelatedResources currentResourceId={resource.id} currentResourceType={resource.type} />
+    <a href={resource.github_url || resource.documentation_url || '#'} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-[18px] border border-[#26313b] bg-[#0d1117] text-[#b8c2cc] shadow-[0_14px_34px_rgba(15,23,42,0.12)]" dir="ltr">
+      <div className="flex items-center justify-between border-b border-[#30363d] bg-[#161b22] px-4 py-3 text-[10px]">
+        <span className="rounded-full bg-[#238636] px-3 py-1 font-bold text-white">Code</span>
+        <div className="flex gap-2"><span className="rounded bg-[#21262d] px-2 py-1">Watch 14</span><span className="rounded bg-[#21262d] px-2 py-1">Fork 104</span><span className="rounded bg-[#21262d] px-2 py-1">Star {resource.github_stats?.stars ?? 856}</span></div>
+      </div>
+      <div className="grid min-h-[285px] grid-cols-1 text-[10px] sm:grid-cols-[minmax(0,1fr)_180px] sm:text-xs">
+        <div className="border-r border-[#30363d] p-4">
+          <div className="mb-3 flex justify-between rounded-md border border-[#30363d] px-3 py-2"><span>Go to file</span><span>Public</span></div>
+          {rows.map((row, index) => <div key={row} className="flex justify-between border-b border-[#21262d] py-3"><span>{row}</span><span>{index + 2} days ago</span></div>)}
         </div>
-
-        {/* Sidebar (right column in RTL) */}
-        <aside className="lg:col-span-1">
-          <div className="sticky top-6 space-y-6">
-            {/* Trusted By */}
-            {resource.consumers && resource.consumers.length > 0 && (
-              <TrustedBySection consumers={resource.consumers} />
-            )}
-
-            {/* Access request CTA */}
-            <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-5">
-              <h3 className="font-heading font-semibold text-sm mb-3">{t.resource.detail.accessRequest}</h3>
-              <p className="text-xs text-[var(--text-secondary)] mb-4 leading-relaxed">
-                {t.resource.detail.accessRequestDescription}
-              </p>
-              <AccessRequestButton
-                resourceSlug={resource.slug}
-                resourceName={resource.name}
-              />
-            </div>
-
-            {/* Report button */}
-            <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-5">
-              <h3 className="font-heading font-semibold text-sm mb-3">{t.resource.detail.reportModalTitle}</h3>
-              <p className="text-xs text-[var(--text-secondary)] mb-4 leading-relaxed">
-                {t.resource.detail.reportTooltip}
-              </p>
-              <ReportButton
-                resourceSlug={resource.slug}
-                resourceName={resource.name}
-              />
-            </div>
-
-            {/* Quick info card */}
-            <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg p-5">
-              <h3 className="font-heading font-semibold text-sm mb-3">{t.resource.detail.quickSummary}</h3>
-              <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
-                <li className="flex items-center justify-between">
-                  <span>{t.resource.detail.status}</span>
-                  <span className="font-medium text-[var(--success)]">{t.resource.detail.published}</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>{t.resource.detail.license}</span>
-                  <span className="font-medium">{resource.license}</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>{t.resource.detail.itqanCertified}</span>
-                  <span className={`font-medium ${resource.itqan_badge ? 'text-[var(--accent-gold)]' : 'text-[var(--text-muted)]'}`}>
-                    {resource.itqan_badge ? t.resource.detail.yes : t.resource.detail.no}
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
+        <aside className="hidden p-4 sm:block">
+          <h3 className="font-bold text-white">About</h3>
+          <p className="mt-3 leading-5">{description}</p>
+          <div className="mt-4 flex flex-wrap gap-1"><span className="rounded-full bg-[#132f4c] px-2 py-1 text-[#58a6ff]">quran</span><span className="rounded-full bg-[#132f4c] px-2 py-1 text-[#58a6ff]">arabic</span><span className="rounded-full bg-[#132f4c] px-2 py-1 text-[#58a6ff]">toolkit</span></div>
         </aside>
       </div>
+    </a>
+  );
+}
+
+function InfoItem({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
+  return <div className="flex items-center gap-3 text-sm"><span className="text-[#777]">{icon}</span><span><strong>{label}:</strong> {value}</span></div>;
+}
+
+const smallIcon = (path: ReactNode) => <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>{path}</svg>;
+
+export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
+  const { t, locale, direction } = useLanguage();
+  const { data: previewData, loading: previewLoading, hasData } = usePreview(resource.slug, resource.type);
+  const arabicCopy = arabicDescriptions[resource.slug as keyof typeof arabicDescriptions];
+  const localizedDescription = locale === 'ar' && arabicCopy ? arabicCopy.description : resource.description;
+  const localizedShortDescription = locale === 'ar' && arabicCopy ? arabicCopy.short_description : (resource.short_description || resource.description);
+
+  return (
+    <div className="bg-white pb-10 pt-32 text-black sm:pt-36" dir={direction}>
+      <main className="mx-auto max-w-[1050px] px-4 sm:px-6">
+        <header className="mx-auto max-w-[760px] text-start lg:ms-auto lg:me-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black ${typeColors[resource.type]}`}><TypeIcon type={resource.type}/>{t.catalog.types[resource.type]}</span>
+            {resource.itqan_badge && <span className="inline-flex h-9 items-center rounded-full bg-[#171717] px-4 text-xs font-black text-white">إتقان</span>}
+          </div>
+          <h1 className="mt-5 text-3xl font-black leading-[1.4] sm:text-4xl">{resource.name}</h1>
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#aaa]" dir="ltr">
+            <span>{resource.license}</span><span>{resource.version || '—'}</span>
+            <span className="inline-flex items-center gap-1">{smallIcon(<><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 19h14"/></>)} {resource.total_downloads}</span>
+          </div>
+        </header>
+
+
+        <div className="mt-7 grid items-start gap-8 lg:grid-cols-[270px_minmax(0,1fr)]" dir="ltr">
+          <aside className="space-y-4" dir={direction}>
+            {resource.consumers && resource.consumers.length > 0 && <TrustedBySection consumers={resource.consumers}/>}
+            <section className="rounded-xl border border-[#e6e6e6] bg-white p-5">
+              <h2 className="text-sm font-black">{t.resource.detail.accessRequest}</h2>
+              <p className="mt-2 text-xs leading-6 text-[#777]">{t.resource.detail.accessRequestDescription}</p>
+              <div className="mt-4"><AccessRequestButton resourceSlug={resource.slug} resourceName={resource.name}/></div>
+            </section>
+            <ReportButton resourceSlug={resource.slug} resourceName={resource.name}/>
+            <section className="rounded-xl border border-[#e6e6e6] bg-white p-5">
+              <h2 className="text-sm font-black">{t.resource.detail.quickSummary}</h2>
+              <ul className="mt-4 space-y-3 text-xs">
+                <li className="flex items-center justify-between"><span>{t.resource.detail.status}</span><strong>{t.resource.detail.published}</strong></li>
+                <li className="flex items-center justify-between"><span>{t.resource.detail.license}</span><strong>{resource.license}</strong></li>
+                <li className="flex items-center justify-between"><span>{t.resource.detail.itqanCertified}</span><strong>{resource.itqan_badge ? t.resource.detail.yes : t.resource.detail.no}</strong></li>
+              </ul>
+            </section>
+          </aside>
+
+          <div className="min-w-0" dir={direction}>
+            <RepositoryPreview resource={resource} description={localizedShortDescription}/>
+            {hasData && <div className="mt-5"><ResourcePreview resourceType={resource.type} previewData={previewData} loading={previewLoading}/></div>}
+
+            <section className="mt-6">
+              <h2 className="text-xl font-black">{t.resource.detail.description}</h2>
+              <p className="mt-3 whitespace-pre-line text-sm leading-8 text-[#808080]">{localizedDescription}</p>
+            </section>
+
+            <section className="mt-7 rounded-xl border border-[#e5e5e5] bg-white p-6">
+              <h2 className="text-xl font-black">{t.resource.detail.quickSummary}</h2>
+              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <InfoItem icon={smallIcon(<path d="M5 4h14v16H5zM9 8h6M9 12h6"/>)} label={t.resource.detail.license} value={resource.license}/>
+                <InfoItem icon={smallIcon(<><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/></>)} label={t.resource.detail.version} value={resource.version || '—'}/>
+                <InfoItem icon={smallIcon(<><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></>)} label={t.resource.detail.type} value={t.catalog.types[resource.type]}/>
+                <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.created} value={formatDate(resource.created_at, locale)}/>
+                <InfoItem icon={smallIcon(<><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></>)} label={t.resource.detail.updated} value={formatDate(resource.updated_at, locale)}/>
+              </div>
+            </section>
+
+            <section className="mt-6">
+              <GithubStatsCard githubUrl={resource.github_url || resource.documentation_url || "#"} stats={resource.github_stats}/>
+            </section>
+
+            <CommentSection resourceId={resource.id}/>
+          </div>
+        </div>
+
+        <section className="mt-24 overflow-hidden rounded-[24px] bg-[linear-gradient(112deg,#edf1f1_15%,#dbeaf6_100%)] px-7 sm:px-12">
+          <div className="grid items-stretch md:min-h-[340px] gap-8 md:grid-cols-[330px_1fr]" dir="ltr">
+            <div className="flex h-[220px] items-end justify-center self-stretch overflow-hidden sm:h-[270px] md:h-full"><img src="/images/rocket.png" alt="" className="h-full w-auto max-w-full object-contain object-bottom md:max-w-none"/></div>
+            <div className="flex flex-col items-start justify-center py-10 text-start" dir={direction}>
+              <h2 className="text-3xl font-black sm:text-5xl">{locale === 'ar' ? 'انشر موردك القرآني' : 'Publish your Quranic resource'}</h2>
+              <p className="mt-5 text-base leading-8 text-[#818181] sm:text-lg">{locale === 'ar' ? 'شارك مكتبتك أو أداة التطوير أو مجموعة البيانات مع المجتمع. صِل إلى المطورين الذين يبنون الجيل القادم.' : 'Share your library, development tool, or dataset with the community.'}</p>
+              <Link href="/dashboard/resources" className="mt-7 inline-flex rounded-full bg-black px-10 py-4 text-base font-black text-white transition hover:bg-[#171717]">{locale === 'ar' ? 'انشره الآن' : 'Publish now'}</Link>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useState, type FormEvent } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/lib/api-client';
-import { useTranslations } from '@/i18n';
+import { useLanguage } from '@/i18n';
 
 interface AccessRequestButtonProps {
   resourceSlug: string;
@@ -13,99 +13,63 @@ interface AccessRequestButtonProps {
 
 export function AccessRequestButton({ resourceSlug, resourceName }: AccessRequestButtonProps) {
   const { user } = useAuth();
-  const t = useTranslations();
-  const [mounted, setMounted] = useState(false);
+  const { locale, t } = useLanguage();
   const [message, setMessage] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => setMounted(true), []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!user) return;
+    setSubmitting(true);
     setError(null);
-
     try {
       await api.requests.submit(resourceSlug, message);
       setSubmitted(true);
       setMessage('');
-    } catch (err) {
+    } catch {
       setError(t.resource.detail.requestFailed);
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  if (!mounted) {
-    return (
-      <Link href="/login" className="btn-outline block text-center text-sm py-2.5 px-4">
-        {t.resource.detail.loginToRequest}
-      </Link>
-    );
-  }
-
-  if (!user) {
-    return (
-      <Link href="/login" className="btn-outline block text-center text-sm py-2.5 px-4">
-        {t.resource.detail.loginToRequest}
-      </Link>
-    );
-  }
-
   if (submitted) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-        <p className="text-sm text-green-800 font-semibold">{t.resource.detail.requestSent}</p>
-        <p className="text-xs text-green-600 mt-1">{t.resource.detail.requestReviewed}</p>
+      <div className="rounded-xl bg-[#eaf8ef] p-4 text-center text-sm font-bold text-[#176b3a]">
+        {t.resource.detail.requestSent}
       </div>
     );
   }
 
   return (
-    <>
-      {!showModal ? (
+    <form onSubmit={handleSubmit}>
+      <textarea
+        value={message}
+        onChange={(event) => setMessage(event.target.value)}
+        placeholder={locale === 'ar' ? 'اشرح سبب الطلب' : 'Explain why you need access'}
+        aria-label={`${t.resource.detail.accessRequestFor} ${resourceName}`}
+        className="min-h-[92px] w-full resize-none rounded-xl border-0 bg-[#f8f8f8] p-4 text-xs leading-6 outline-none placeholder:text-[#888] focus:ring-1 focus:ring-black/15"
+        required
+      />
+      {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
+      {user ? (
         <button
-          type="button"
-          onClick={() => setShowModal(true)}
-          className="btn-primary block text-center text-sm py-2.5 px-4 w-full"
+          type="submit"
+          disabled={submitting}
+          className="mt-4 h-9 w-full rounded-full bg-black text-xs font-black text-white transition hover:bg-[#171717] disabled:opacity-50"
         >
-          {t.resource.detail.accessRequest}
+          {submitting ? (locale === 'ar' ? 'جارٍ الإرسال...' : 'Sending...') : t.resource.detail.submit}
         </button>
       ) : (
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-heading font-semibold text-sm">{t.resource.detail.accessRequestFor} {resourceName}</h3>
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-lg leading-none"
-            >
-              ×
-            </button>
-          </div>
-          <form onSubmit={handleSubmit}>
-            <textarea
-              placeholder={t.resource.detail.accessReason}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="input-field w-full min-h-[80px] resize-y text-sm mb-3"
-              required
-            />
-            {error && <p className="text-xs text-[var(--danger)] mb-2">{error}</p>}
-            <div className="flex gap-2">
-              <button type="submit" className="btn-primary text-xs py-2 px-4 flex-grow">
-                {t.resource.detail.submit}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowModal(false)}
-                className="btn-secondary text-xs py-2 px-4"
-              >
-                {t.resource.detail.cancel}
-              </button>
-            </div>
-          </form>
-        </div>
+        <Link
+          href={`/login?redirect=/resources/${resourceSlug}`}
+          className="mt-4 flex h-9 w-full items-center justify-center rounded-full bg-black text-xs font-black text-white transition hover:bg-[#171717]"
+        >
+          {t.resource.detail.loginToRequest}
+        </Link>
       )}
-    </>
+    </form>
   );
 }

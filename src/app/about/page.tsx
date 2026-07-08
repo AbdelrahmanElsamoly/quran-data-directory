@@ -1,151 +1,114 @@
 'use client';
 
-import { useTranslations } from '@/i18n';
+import Image from 'next/image';
+import { Fragment } from 'react';
+import { useLanguage } from '@/i18n';
+
+const decorativeStars = [
+  { top: '3%', left: '3%', size: 'clamp(44px, 7vw, 105px)', opacity: 0.07, rotate: -12 },
+  { top: '9%', right: '5%', size: 'clamp(70px, 11vw, 165px)', opacity: 0.06, rotate: 18 },
+  { top: '20%', left: '13%', size: 'clamp(34px, 5vw, 74px)', opacity: 0.09, rotate: 31 },
+  { top: '27%', right: '14%', size: 'clamp(48px, 8vw, 118px)', opacity: 0.055, rotate: -24 },
+  { top: '36%', left: '2%', size: 'clamp(68px, 10vw, 145px)', opacity: 0.06, rotate: 14 },
+  { top: '43%', right: '3%', size: 'clamp(36px, 6vw, 88px)', opacity: 0.1, rotate: 38 },
+  { top: '51%', left: '21%', size: 'clamp(30px, 4vw, 62px)', opacity: 0.07, rotate: -31 },
+  { top: '58%', right: '20%', size: 'clamp(62px, 9vw, 132px)', opacity: 0.055, rotate: 9 },
+  { top: '67%', left: '4%', size: 'clamp(38px, 6vw, 92px)', opacity: 0.085, rotate: 26 },
+  { top: '74%', right: '5%', size: 'clamp(75px, 12vw, 175px)', opacity: 0.05, rotate: -17 },
+  { top: '83%', left: '16%', size: 'clamp(46px, 7vw, 108px)', opacity: 0.065, rotate: 42 },
+  { top: '91%', right: '23%', size: 'clamp(32px, 5vw, 72px)', opacity: 0.09, rotate: -36 },
+] as const;
+
+function BrandText({ text }: { text: string }) {
+  return text.split('RATQ').map((part, index, parts) => (
+    <Fragment key={`${part}-${index}`}>
+      {part}
+      {index < parts.length - 1 && (
+        <span className="mx-1 inline-flex translate-y-[0.15em] align-baseline">
+          <Image src="/images/logo.png" alt="RATQ" width={30} height={30} className="h-[1em] w-auto object-contain" />
+        </span>
+      )}
+    </Fragment>
+  ));
+}
+
+function DecorativeStars() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+      {decorativeStars.map((star, index) => (
+        <Image
+          key={index}
+          src="/images/islamicStar.png"
+          alt=""
+          width={180}
+          height={180}
+          className="absolute h-auto select-none object-contain"
+          style={{
+            top: star.top,
+            left: 'left' in star ? star.left : undefined,
+            right: 'right' in star ? star.right : undefined,
+            width: star.size,
+            opacity: star.opacity,
+            transform: `rotate(${star.rotate}deg)`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function AboutPage() {
-  const t = useTranslations();
+  const { t, direction } = useLanguage();
+  const offerItems = Object.values(t.about.offer.items);
 
   return (
-    <main>
-      {/* Section 1: Why We Built It (Narrative Intro) */}
-      <section className="relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 via-[var(--bg-primary)] to-[var(--gold)]/10" />
-        <div className="section-padding pt-16 pb-16 relative">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--text-primary)] leading-snug mb-8">
-              {t.about.pageTitle}
-            </h1>
-            <div className="space-y-6 text-lg text-[var(--text-secondary)] leading-relaxed text-balance">
-              <p>{t.about.why.paragraph1}</p>
-              <p>{t.about.why.paragraph2}</p>
+    <main className="page-enter relative isolate min-h-screen overflow-hidden bg-[linear-gradient(145deg,#EBEFF0_0%,#F7F9FA_48%,#D8E8F5_100%)] bg-fixed pb-20 pt-32 text-black" dir={direction}>
+      <DecorativeStars />
+
+      <section className="relative z-10 mx-auto max-w-[1480px] px-3 sm:px-4">
+        <div className="px-3 pb-10 pt-16 sm:px-10 sm:pt-24 lg:px-16 lg:pb-12 lg:pt-28">
+          <div className="max-w-4xl">
+            <div className="flex flex-wrap items-start gap-3 sm:items-center"><h1 className="min-w-0 text-4xl font-black leading-[1.2] text-black sm:text-5xl">{t.about.pageTitle}</h1><Image src="/images/logo.png" alt="RATQ" width={44} height={44} className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" priority /></div>
+            <div className="mt-6 max-w-3xl space-y-3 text-base leading-8 text-[#59636d] sm:text-lg sm:leading-9">
+              <p><BrandText text={t.about.why.paragraph1} /></p>
+              <p><BrandText text={t.about.why.paragraph2} /></p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 2: What is RATQ */}
-      <section className="section-padding py-16 bg-[var(--bg-secondary)]">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-6">
-            RATQ
-          </h2>
-          <div className="space-y-6 text-[var(--text-secondary)] leading-relaxed text-balance">
-            <p>{t.about.whatIs.paragraph1}</p>
-            <p>
-              {t.about.whatIs.paragraph2Before}
-              <strong className="text-[var(--accent-primary)]">{t.about.whatIs.standards}</strong>
-              {t.about.whatIs.paragraph2After}
-            </p>
-          </div>
+      <section className="relative z-10 mx-auto mt-14 max-w-[980px] px-5 sm:mt-20">
+        <h2 className="text-3xl font-black leading-tight text-black sm:text-4xl"><BrandText text={t.about.whatIs.title} /></h2>
+        <div className="mt-7 space-y-5 text-base leading-8 text-[#59636d] sm:text-lg sm:leading-9">
+          <p><BrandText text={t.about.whatIs.paragraph1} /></p>
+          <p>{t.about.whatIs.paragraph2Before}<strong className="font-black text-black">{t.about.whatIs.standards}</strong>{t.about.whatIs.paragraph2After}</p>
         </div>
       </section>
 
-      {/* Section 3: What We Offer */}
-      <section className="section-padding py-16">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-10 text-center">
-            {t.about.offer.title}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Curated Catalog */}
-            <div className="card rounded-xl p-6 bg-[var(--bg-card)]">
-              <div className="w-10 h-10 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                </svg>
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-[var(--text-primary)] mb-2">
-                {t.about.offer.items.catalog.title}
-              </h3>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                {t.about.offer.items.catalog.description}
-              </p>
-            </div>
-
-            {/* Itqan Verification */}
-            <div className="card rounded-xl p-6 bg-[var(--bg-card)]">
-              <div className="w-10 h-10 rounded-lg bg-[var(--gold)]/20 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-                </svg>
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-[var(--text-primary)] mb-2">
-                {t.about.offer.items.verification.title}
-              </h3>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                {t.about.offer.items.verification.description}
-              </p>
-            </div>
-
-            {/* Access Management */}
-            <div className="card rounded-xl p-6 bg-[var(--bg-card)]">
-              <div className="w-10 h-10 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                </svg>
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-[var(--text-primary)] mb-2">
-                {t.about.offer.items.access.title}
-              </h3>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                {t.about.offer.items.access.description}
-              </p>
-            </div>
-
-            {/* Community Engagement */}
-            <div className="card rounded-xl p-6 bg-[var(--bg-card)]">
-              <div className="w-10 h-10 rounded-lg bg-[var(--gold)]/20 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                </svg>
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-[var(--text-primary)] mb-2">
-                {t.about.offer.items.community.title}
-              </h3>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                {t.about.offer.items.community.description}
-              </p>
-            </div>
-
-            {/* Developer Tools */}
-            <div className="card rounded-xl p-6 bg-[var(--bg-card)]">
-              <div className="w-10 h-10 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-                </svg>
-              </div>
-              <h3 className="font-heading text-lg font-semibold text-[var(--text-primary)] mb-2">
-                {t.about.offer.items.tools.title}
-              </h3>
-              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                {t.about.offer.items.tools.description}
-              </p>
-            </div>
-          </div>
+      <section className="relative z-10 mx-auto mt-14 max-w-[980px] px-5 sm:mt-20">
+        <h2 className="text-3xl font-black leading-tight text-black sm:text-4xl"><BrandText text={t.about.offer.title} /></h2>
+        <p className="mt-4 max-w-3xl text-base leading-8 text-[#6f7780]"><BrandText text={t.about.offer.intro} /></p>
+        <div className="mt-9 border-t border-[#d7dde1]">
+          {offerItems.map((item, index) => (
+            <article key={item.title} className="grid gap-3 border-b border-[#d7dde1] py-7 sm:grid-cols-[48px_240px_minmax(0,1fr)] sm:gap-6">
+              <span className="text-sm font-black text-[#8d969e]">{String(index + 1).padStart(2, '0')}</span>
+              <h3 className="text-lg font-black leading-7 text-black"><BrandText text={item.title} /></h3>
+              <p className="text-sm leading-7 text-[#59636d]"><BrandText text={item.description} /></p>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* Section 4: Our Mission */}
-      <section className="section-padding py-16 bg-[var(--bg-secondary)]">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-6">
-            {t.about.mission.title}
-          </h2>
-          <p className="text-lg text-[var(--text-secondary)] leading-relaxed text-balance">
-            {t.about.mission.description}
-          </p>
-        </div>
-      </section>
-
-      {/* Section 5: Our Vision */}
-      <section className="section-padding py-16">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-6">
-            {t.about.vision.title}
-          </h2>
-          <p className="text-lg text-[var(--text-secondary)] leading-relaxed text-balance">
-            {t.about.vision.description}
-          </p>
+      <section className="relative z-10 mx-auto mt-14 max-w-[980px] px-5 sm:mt-20">
+        <div className="grid gap-10 border-t border-[#d7dde1] pt-10 sm:gap-12 sm:pt-12 md:grid-cols-2">
+          <article>
+            <h2 className="text-2xl font-black text-black">{t.about.mission.title}</h2>
+            <p className="mt-5 text-base leading-8 text-[#59636d]"><BrandText text={t.about.mission.description} /></p>
+          </article>
+          <article>
+            <h2 className="text-2xl font-black text-black">{t.about.vision.title}</h2>
+            <p className="mt-5 text-base leading-8 text-[#59636d]"><BrandText text={t.about.vision.description} /></p>
+          </article>
         </div>
       </section>
     </main>
