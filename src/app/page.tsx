@@ -142,6 +142,7 @@ export default function HomePage() {
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
 
+      
       gsap.to(rocket, {
         autoAlpha: 1,
         y: 0,
