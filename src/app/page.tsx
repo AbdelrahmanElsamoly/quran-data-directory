@@ -143,6 +143,7 @@ export default function HomePage() {
       if (!entry.isIntersecting) return;
 
       
+
       gsap.to(rocket, {
         autoAlpha: 1,
         y: 0,
